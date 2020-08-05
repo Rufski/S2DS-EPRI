@@ -1,2 +1,6 @@
 # exclude data directory
 /data/*
+# exclude hidden files except .gitignore and .gitkeep 
+.*
+!.gitignore
+!.gitkeep
