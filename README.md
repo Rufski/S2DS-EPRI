@@ -13,7 +13,7 @@ Download the folder "Data" as a zip archive from this project's [box.com storage
 
 Usage: `extract_and_rename_raw_synthetic_data.sh /path/to/datfile.zip /path/to/root/of/git-repo`, e.g. `extract_and_rename_raw_synthetic_data.sh ~/downloads/Data.zip ~/s2ds/code/Aug20_Epri/`.
 
-MAKE SURE TO PROVIDE THE CORRECT PATHS AS THE SECOND ARGUMENT AS THE SCRIPT MIGHT RENAME FILES IN WHATEVER FOLDER YOU PROVIDE!
+MAKE SURE TO PROVIDE THE CORRECT PATH FOR THE SECOND ARGUMENT AS THE SCRIPT MIGHT RENAME FILES IN WHATEVER FOLDER YOU PROVIDE!
 
 The script takes about 10 minutes to extract and rename all datasets. Folders and files are renamed according to the file structure shown below.
 
@@ -55,6 +55,7 @@ data
 ```
 
 TODO Option to only extract particular datasets
+
 FIXME Location names are dropped during renaming
 
 ### Types of Synthetic Data
@@ -73,11 +74,11 @@ There are no missing data points in these synthetic datasets. The datasets are g
 
 For each data point of the time series the following attributes are provided:
 
-| Attribute               | Column name             |  Units |
-|-------------------------|:-----------------------:|-------:|
-| Power                   | Power                   | kW     |
-| Plane of array          | POA                     | W/m^2  |
-| Ambient Temperatur      | Tamb                    | °C     |
-| Wind                    | Wind                    | m/s    |
-| Degradation rate / year | Degradation_rate_per_yr | %/year |
-| Soiling                 | soiling                 | -      |
+| Attribute               | Column name             |  Units  |
+|-------------------------|:-----------------------:|--------:|
+| Power                   | Power                   | kW      |
+| Plane of array          | POA                     | W/m^2   |
+| Ambient Temperatur      | Tamb                    | °C      |
+| Wind                    | Wind                    | m/s     |
+| Degradation rate / year | Degradation_rate_per_yr | year^-1 |
+| Soiling                 | soiling                 | -       |
