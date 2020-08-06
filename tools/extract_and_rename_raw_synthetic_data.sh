@@ -40,10 +40,10 @@ extract_dataset_and_rename () {
 }
 
 # create data directory in the project if it does not exist
-if [ -d "$path_to_repo/data" ]; then
-  printf "\ndirectory '/data' already exists\n\n"
+if [ -d "$path_to_repo/data/raw" ]; then
+  printf "\ndirectory '/data/raw' already exists\n\n"
 else
-  printf "\ncreating directory '/data'\n\n"
+  printf "\ncreating directory '/data/raw'\n\n"
   mkdir "$path_to_repo/data"
 fi
 
