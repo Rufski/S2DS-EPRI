@@ -9,54 +9,7 @@ For the time being the data used in this project are synthetic data (generated b
 
 ### How to Get and Extract the Data
 
-Download the folder "Data" as a zip archive from this project's [box.com storage](https://app.box.com/folder/117614749421) provided by EPRI. Use the bash script at `tools/extract_and_rename_raw_synthetic_data.sh` to extract the data. 
-
-Usage: `extract_and_rename_raw_synthetic_data.sh /path/to/datfile.zip /path/to/root/of/git-repo`, e.g. `extract_and_rename_raw_synthetic_data.sh ~/downloads/Data.zip ~/s2ds/code/Aug20_Epri/`.
-
-MAKE SURE TO PROVIDE THE CORRECT PATH FOR THE SECOND ARGUMENT AS THE SCRIPT MIGHT RENAME FILES IN WHATEVER FOLDER YOU PROVIDE!
-
-The script takes about 10 minutes to extract and rename all datasets. Folders and files are renamed according to the file structure shown below.
-
-```
-data
-│
-└───processed
-│   
-└───raw
-    └───synthetic_basic
-    │   │ synthetic_basic_001.csv
-    │   │ synthetic_basic_002.csv
-    │   │ synthetic_basic_003.csv
-    │   │ ...
-    │   
-    └───synthetic_soil
-    │   │ synthetic_soil_001.csv
-    │   │ synthetic_soil_002.csv
-    │   │ synthetic_soil_003.csv
-    │   │ ...
-    │   
-    └───synthetic_soil_weather
-    │   │ synthetic_soil_weather_001.csv
-    │   │ synthetic_soil_weather_002.csv
-    │   │ synthetic_soil_weather_003.csv
-    │   │ ...
-    │   
-    └───synthetic_soil_weather_locations
-    │   │ synthetic_soil_weather_001.csv
-    │   │ synthetic_soil_weather_002.csv
-    │   │ synthetic_soil_weather_003.csv
-    │   │ ...
-    │   
-    └───synthetic_weather
-        │ synthetic_weather_001.csv
-        │ synthetic_weather_002.csv
-        │ synthetic_weather_003.csv
-        │ ...
-```
-
-TODO Option to only extract particular datasets
-
-FIXME Location names are dropped during renaming
+Download the folder as a zip archive from this project's [box.com storage](https://app.box.com/folder/117614749421) provided by EPRI. Use the bash script provided at FIXME to extract the data. 
 
 ### Types of Synthetic Data
 
@@ -74,11 +27,11 @@ There are no missing data points in these synthetic datasets. The datasets are g
 
 For each data point of the time series the following attributes are provided:
 
-| Attribute               | Column name             |  Units  |
-|-------------------------|:-----------------------:|--------:|
-| Power                   | Power                   | kW      |
-| Plane of array          | POA                     | W/m^2   |
-| Ambient Temperatur      | Tamb                    | °C      |
-| Wind                    | Wind                    | m/s     |
-| Degradation rate / year | Degradation_rate_per_yr | year^-1 |
-| Soiling                 | soiling                 | -       |
+| Attribute               | Column name             |  Units |
+|-------------------------|:-----------------------:|-------:|
+| Power                   | Power                   | kW     |
+| Plane of array          | POA                     | W/m^2  |
+| Ambient Temperatur      | Tamb                    | °C     |
+| Wind                    | Wind                    | ??     |
+| Degradation rate / year | Degradation_rate_per_yr | -      |
+| Soiling                 | soiling                 | -      |
