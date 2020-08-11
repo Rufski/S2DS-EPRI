@@ -1,7 +1,6 @@
 # Aug20_epri
+
 For Team Epri at S2DS August 2020
-
-
 
 ## Data 
 
@@ -9,7 +8,9 @@ For the time being the data used in this project are synthetic data (generated b
 
 ### How to Get and Extract the Data
 
-Download the folder as a zip archive from this project's [box.com storage](https://app.box.com/folder/117614749421) provided by EPRI. Use the bash script provided at FIXME to extract the data. 
+For easier handling we use prepared zip-files which can be read without extracting them using the function `extract_data.get_df_from_zip`. The prepared zip-files are located in our [google-drive](https://drive.google.com/drive/folders/1IByP1vFGRjsDTWvWETm523yIduE5Ao4E) and in EPRI's [box.com storage](https://app.box.com/folder/120323763205).
+
+In order to prepare (rename and re-zip) these zip-files, bash scripts are available under `/tools/`. Usually, this should not be necessary as prepared zip-files are available. Use these scripts with caution as some of them rename all files in the destination directory.
 
 ### Types of Synthetic Data
 
@@ -32,6 +33,6 @@ For each data point of the time series the following attributes are provided:
 | Power                   | Power                   | kW     |
 | Plane of array          | POA                     | W/m^2  |
 | Ambient Temperatur      | Tamb                    | °C     |
-| Wind                    | Wind                    | ??     |
-| Degradation rate / year | Degradation_rate_per_yr | -      |
+| Wind                    | Wind                    | m/s    |
+| Degradation rate / year | Degradation_rate_per_yr | %/year |
 | Soiling                 | soiling                 | -      |
