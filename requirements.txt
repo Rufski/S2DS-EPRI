@@ -1,0 +1,9 @@
+pandas
+jupyter
+matplotlib
+numpy
+mdp
+statsmodels 
+sklearn 
+scipy
+zipfile2
