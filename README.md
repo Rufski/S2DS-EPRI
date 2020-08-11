@@ -12,6 +12,45 @@ For easier handling we use prepared zip-files which can be read without extracti
 
 In order to prepare (rename and re-zip) these zip-files, bash scripts are available under `/tools/`. Usually, this should not be necessary as prepared zip-files are available. Use these scripts with caution as some of them rename all files in the destination directory.
 
+The unpacked folder and file structure follows the convention below:
+
+```
+data
+│
+└───processed
+│   
+└───raw
+    └───synthetic_basic
+    │   │ synthetic_basic_1.csv
+    │   │ synthetic_basic_2.csv
+    │   │ synthetic_basic_3.csv
+    │   │ ...
+    │   
+    └───synthetic_soil
+    │   │ synthetic_soil_1.csv
+    │   │ synthetic_soil_2.csv
+    │   │ synthetic_soil_3.csv
+    │   │ ...
+    │   
+    └───synthetic_soil_weather
+    │   │ synthetic_soil_weather_1.csv
+    │   │ synthetic_soil_weather_2.csv
+    │   │ synthetic_soil_weather_3.csv
+    │   │ ...
+    │   
+    └───synthetic_soil_weather_locations
+    │   │ synthetic_soil_weather_1.csv
+    │   │ synthetic_soil_weather_2.csv
+    │   │ synthetic_soil_weather_3.csv
+    │   │ ...
+    │   
+    └───synthetic_weather
+        │ synthetic_weather_1.csv
+        │ synthetic_weather_2.csv
+        │ synthetic_weather_3.csv
+        │ ...
+```
+
 ### Types of Synthetic Data
 
 (taken from Daniel's comments on the data)
