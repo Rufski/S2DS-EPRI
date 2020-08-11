@@ -8,7 +8,7 @@ For the time being the data used in this project are synthetic data (generated b
 
 ### How to Get and Extract the Data
 
-For easier handling we use prepared zip-files which can be read without extracting them using the function `extract_data.get_df_from_zip`. The prepared zip-files are located in our [google-drive](https://drive.google.com/drive/folders/1IByP1vFGRjsDTWvWETm523yIduE5Ao4E) and in EPRI's [box.com storage](https://app.box.com/folder/120323763205).
+For easier handling we use prepared zip-files which can be read without extracting them using the function `import_data.import_df_from_zip`. The prepared zip-files are located in our [google-drive](https://drive.google.com/drive/folders/1IByP1vFGRjsDTWvWETm523yIduE5Ao4E) and in EPRI's [box.com storage](https://app.box.com/folder/120323763205). It is also possible to use the extracted zip-folders (might be faster) using the function `import_data.import_df_from_dir`.
 
 In order to prepare (rename and re-zip) these zip-files, bash scripts are available under `/tools/`. Usually, this should not be necessary as prepared zip-files are available. Use these scripts with caution as some of them rename all files in the destination directory.
 
