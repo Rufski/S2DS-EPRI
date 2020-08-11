@@ -198,14 +198,15 @@ def remove_clipping_with_universal_window_fastest(
     if verbose:
         initial_size = len(time_series_df)
 
-    clipping_df = time_series_df[time_series_df.Power == max_power]
+    clipping_df = time_series_df[time_series_df.Power >= max_power]
+    print(clipping_df.shape)
     if clipping_df.empty:
         if verbose:
             print("Power never exceeds max value; no data removed.")
         return time_series_df
     else:
-        window_first_minute = clipping_df.Power.min()
-        window_last_minute = clipping_df.Power.max()
+        window_first_minute = clipping_df.minute_of_day.min()
+        window_last_minute = clipping_df.minute_of_day.max()
 
     # Removing the fixed window
     time_series_df = time_series_df[
