@@ -22,21 +22,21 @@ def remove_night_time_data(df):
 def remove_clipping_with_universal_window(
     time_series_df, verbose=False, max_power=None
 ):
-    """
-    This function determines a time window within a day when, over the span
+    """Remove clipping from a power signal.
+
+    The function determines a time window within a day when, over the span
     of the time series, each minute goes through at least one day that hits
     the maximum power beyond which power is maxed out.
 
-        Parameters:
-            time_series_df (Pandas DataFrame): with a time stamp (datetime) as
-                an index, a "Power" column (float), and a "minute_of_day"
-                column
-            verbose (bool, optional): print additional info if true
-            max_power (float, optional): specify maximal power
+    Args:
+        time_series_df (Pandas DataFrame): with a time stamp (datetime) as an
+            index, a "Power" column (float), and a "minute_of_day" (int) column
+        verbose (bool): Optional; print additional info if true
+        max_power (float): Optional; specify maximal power
 
-        Returns:
-            time_series_df (Pandas DataFrame): a copy of the input DataFrame
-                with the aforementioned time window removed.
+    Returns:
+        Pandas DataFrame: a copy of the input DataFrame with the time window
+            removed.
     """
     if not max_power:
         max_power = time_series_df.Power.max()
@@ -75,30 +75,31 @@ def remove_clipping_with_universal_window(
 def remove_clipping_with_flexible_window(
     time_series_df, verbose=False, max_power=None
 ):
-    """
-    This function determines a time window for each day <day> of the year, so
+    """Remove clipping from a power signal.
+
+    The function determines a time window for each day <day> of the year, so
     that for every minute <min> in the time window there is year in the time
     series such that <min>-th minute of the <day>-th day of that year hits the
     maximum power.
 
-        Parameters:
-            time_series_df (Pandas DataFrame): with a time stamp (datetime) as
-                an index, a "Power" column (float), and a "minute_of_day"
-                column
-            verbose (bool, optional): print additional info if true
-            max_power (float, optional): specify maximal power
+    Args:
+        time_series_df (Pandas DataFrame): with a time stamp (datetime) as an
+            index, a "Power" column (float), and a "minute_of_day" (int) column
+        verbose (bool): Optional; print additional info if true
+        max_power (float): Optional; specify maximal power
 
-        Returns:
-            time_series_df (Pandas DataFrame): a copy of the input DataFrame
-                with the aforementioned time window removed.
+    Returns:
+        Pandas DataFrame: a copy of the input DataFrame with the time window
+            removed.
     """
     if not max_power:
         max_power = time_series_df.Power.max()
         if verbose:
             print("Max power set as "+str(max_power))
 
-    # FIXME what if 'temp_day_of_year' is in the dataframe
-    time_series_df['temp_day_of_year'] = time_series_df.index.dayofyear
+    day_of_year = np.array(time_series_df.index.dayofyear)
+    minute_of_day = np.array(time_series_df.minute_of_day)
+    power = np.array(time_series_df.Power)
     windows = np.zeros((2, 366))
     found_non_empyt_window = False
 
@@ -108,8 +109,8 @@ def remove_clipping_with_flexible_window(
 
     for day in range(0, 366):
         clipping_df = time_series_df[
-                (time_series_df.temp_day_of_year == day + 1) &
-                (time_series_df.Power == max_power)
+                (day_of_year == day + 1) &
+                (power == max_power)
             ]
         if clipping_df.empty:
             windows[0][day] = -1
@@ -127,10 +128,9 @@ def remove_clipping_with_flexible_window(
 
     # Remove the windows
     time_series_df = time_series_df[
-        (time_series_df.minute_of_day < windows[0]
-            [time_series_df.temp_day_of_year - 1]) |
-        (time_series_df.minute_of_day > windows[1]
-            [time_series_df.temp_day_of_year - 1])]
+        (minute_of_day < windows[0][day_of_year - 1]) |
+        (minute_of_day > windows[1][day_of_year - 1])
+        ]
 
     if verbose:
         print(str(100 * (1 - len(time_series_df)/initial_size)) +
