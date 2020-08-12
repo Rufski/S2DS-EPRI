@@ -27,13 +27,16 @@ def remove_clipping_with_universal_window(
     of the time series, each minute goes through at least one day that hits
     the maximum power beyond which power is maxed out.
 
-    Input: a time series with a time stamp in datetime format as an index,
-    a "Power" column where the power measured is stored as a float and a
-    "minute_of_day" column mentioning the nth minute of day the power is
-    measured at.
+        Parameters:
+            time_series_df (Pandas DataFrame): with a time stamp (datetime) as
+                an index, a "Power" column (float), and a "minute_of_day"
+                column
+            verbose (bool, optional): print additional info if true
+            max_power (float, optional): specify maximal power
 
-    Output: same time series where the aforementioned time window has been
-    removed.
+        Returns:
+            time_series_df (Pandas DataFrame): a copy of the input DataFrame
+                with the aforementioned time window removed.
     """
     if not max_power:
         max_power = time_series_df.Power.max()
@@ -102,15 +105,16 @@ def remove_clipping_with_universal_window_faster(
     of the time series, each minute goes through at least one day that hits
     the maximum power beyond which power is maxed out.
 
-    This version of the function is expected to be faster and the original.
+        Parameters:
+            time_series_df (Pandas DataFrame): with a time stamp (datetime) as
+                an index, a "Power" column (float), and a "minute_of_day"
+                column
+            verbose (bool, optional): print additional info if true
+            max_power (float, optional): specify maximal power
 
-    Input: a time series with a time stamp in datetime format as an index,
-    a "Power" column where the power measured is stored as a float and a
-    "minute_of_day" column mentioning the nth minute of day the power is
-    measured at.
-
-    Output: same time series where the aforementioned time window has been
-    removed.
+        Returns:
+            time_series_df (Pandas DataFrame): a copy of the input DataFrame
+                with the aforementioned time window removed.
     """
     if not max_power:
         max_power = time_series_df.Power.max()
@@ -178,16 +182,16 @@ def remove_clipping_with_universal_window_fastest(
     of the time series, each minute goes through at least one day that hits
     the maximum power beyond which power is maxed out.
 
-    This version of the function is expected to be even faster than the
-    original.
+        Parameters:
+            time_series_df (Pandas DataFrame): with a time stamp (datetime) as
+                an index, a "Power" column (float), and a "minute_of_day"
+                column
+            verbose (bool, optional): print additional info if true
+            max_power (float, optional): specify maximal power
 
-    Input: a time series with a time stamp in datetime format as an index,
-    a "Power" column where the power measured is stored as a float and a
-    "minute_of_day" column mentioning the nth minute of day the power is
-    measured at.
-
-    Output: same time series where the aforementioned time window has been
-    removed.
+        Returns:
+            time_series_df (Pandas DataFrame): a copy of the input DataFrame
+                with the aforementioned time window removed.
     """
     if not max_power:
         max_power = time_series_df.Power.max()
@@ -232,13 +236,16 @@ def remove_clipping_with_flexible_window(
     series such that <min>-th minute of the <day>-th day of that year hits the
     maximum power.
 
-    Input: a time series with a time stamp in datetime format as an index,
-    a "Power" column where the power measured is stored as a float and a
-    "minute_of_day" column mentioning the nth minute of day the power is
-    measured at.
+        Parameters:
+            time_series_df (Pandas DataFrame): with a time stamp (datetime) as
+                an index, a "Power" column (float), and a "minute_of_day"
+                column
+            verbose (bool, optional): print additional info if true
+            max_power (float, optional): specify maximal power
 
-    Output: same time series where the aforementioned time window has been
-    removed.
+        Returns:
+            time_series_df (Pandas DataFrame): a copy of the input DataFrame
+                with the aforementioned time window removed.
     """
     if not max_power:
         max_power = time_series_df.Power.max()
