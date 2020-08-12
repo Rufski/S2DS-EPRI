@@ -221,3 +221,67 @@ def remove_clipping_with_universal_window_fastest(
         )
 
     return time_series_df
+
+
+def remove_clipping_with_flexible_window(
+    time_series_df, verbose=False, max_power=None
+):
+    """
+    This function determines a time window for each day <day> of the year, so
+    that for every minute <min> in the time window there is year in the time
+    series such that <min>-th minute of the <day>-th day of that year hits the
+    maximum power.
+
+    Input: a time series with a time stamp in datetime format as an index,
+    a "Power" column where the power measured is stored as a float and a
+    "minute_of_day" column mentioning the nth minute of day the power is
+    measured at.
+
+    Output: same time series where the aforementioned time window has been
+    removed.
+    """
+    if not max_power:
+        max_power = time_series_df.Power.max()
+        if verbose:
+            print("Max power set as "+str(max_power))
+
+    # FIXME what if 'temp_day_of_year' is in the dataframe
+    time_series_df['temp_day_of_year'] = time_series_df.index.dayofyear
+    windows = np.zeros((2, 366))
+    found_non_empyt_window = False
+
+    # To measure at the end how much data is removed
+    if verbose:
+        initial_size = len(time_series_df)
+
+    for day in range(0, 366):
+        clipping_df = time_series_df[
+                (time_series_df.temp_day_of_year == day + 1) &
+                (time_series_df.Power == max_power)
+            ]
+        if clipping_df.empty:
+            windows[0][day] = -1
+            windows[1][day] = -1
+        else:
+            windows[0][day] = clipping_df.minute_of_day.min()
+            windows[1][day] = clipping_df.minute_of_day.max()
+            found_non_empyt_window = True
+
+    if not found_non_empyt_window:
+        # No non empty window was found
+        if verbose:
+            print("Power never exceeds max value; no data removed.")
+        return time_series_df
+
+    # Remove the windows
+    time_series_df = time_series_df[
+        (time_series_df.minute_of_day < windows[0]
+            [time_series_df.temp_day_of_year - 1]) |
+        (time_series_df.minute_of_day > windows[1]
+            [time_series_df.temp_day_of_year - 1])]
+
+    if verbose:
+        print(str(100 * (1 - len(time_series_df)/initial_size)) +
+              "% of the data has been removed!")
+
+    return time_series_df
