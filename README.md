@@ -59,4 +59,4 @@ The project structure of this github repository adheres to the Cookiecutter Data
 
 ### Coding Style
 
-This project uses the [PEP8 style guide](https://www.python.org/dev/peps/pep-0008/) for coding in python. The docstrings we use Google style, see, e.g., [here](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/index.html).
+This project uses the [PEP8 style guide](https://www.python.org/dev/peps/pep-0008/) for coding in python. The docstrings we use Google style, see, e.g., [here](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/index.html#google-vs-numpy).
