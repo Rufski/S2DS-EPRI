@@ -8,17 +8,17 @@ import zipfile as zf
 import time
 import pandas as pd
 
-
 def import_df_from_zip(path_to_zip, csv_index, verbose=False):
 
     """
-    Takes a dataset in zip-format and returns one of the csv-files as a
-    formatted dataframe.
+    Import a timeseries from a zipped datafile
 
-        Parameters:
+    Extracts a csv file from the zip-archive and transforms it to a formatted dataframe.
+
+        Args:
             path_to_zip (str): path to the zip-file containing the dataset
             csv_index (int): index (0-49) of the desired csv-file
-            verbose (bool, optional): print output if true
+            verbose (bool): optional, print output if true
 
         Returns:
             data_frame (Pandas DataFrame): dataframe converted from csv
@@ -56,13 +56,14 @@ def import_df_from_zip(path_to_zip, csv_index, verbose=False):
 def import_df_from_dir(path_to_dir, csv_index, verbose=False):
 
     """
-    Takes csv file from the destination directory and returns a formatted
-    dataframe.
+    Import a timeseries from a data directory
+    
+    Takes csv file from the destination directory and returns a formatted dataframe.
 
-        Parameters:
+        Args:
             path_to_dir (str): path to the directory containing the csv-files
             csv_index (int): index (0-49) of the desired csv-file
-            verbose (bool, optional): print output if true
+            verbose (bool): optional, print output if true
 
         Returns:
             data_frame (Pandas DataFrame): dataframe converted from csv
