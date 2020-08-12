@@ -1,6 +1,16 @@
-# Aug20_epri
+# Team EPRI
 
-For Team Epri at S2DS August 2020
+This is the github repository for Team EPRI at S2DS August 2020.
+
+-----------
+
+## Table of Contents
+
+* [Data](https://github.com/S2DSLondon/Aug20_Epri#data)
+
+* [Conventions and Style](https://github.com/S2DSLondon/Aug20_Epri#conventions-and-style)
+
+-----------
 
 ## Data 
 
@@ -39,9 +49,9 @@ data
     │   │ ...
     │   
     └───synthetic_soil_weather_locations
-    │   │ synthetic_soil_weather_1.csv
-    │   │ synthetic_soil_weather_2.csv
-    │   │ synthetic_soil_weather_3.csv
+    │   │ synthetic_soil_weather_locations_co_1.csv
+    │   │ synthetic_soil_weather_locations_co_2.csv
+    │   │ synthetic_soil_weather_locations_co_3.csv
     │   │ ...
     │   
     └───synthetic_weather
@@ -75,3 +85,19 @@ For each data point of the time series the following attributes are provided:
 | Wind                    | Wind                    | m/s    |
 | Degradation rate / year | Degradation_rate_per_yr | %/year |
 | Soiling                 | soiling                 | -      |
+
+-----------
+
+## Conventions and Style 
+
+### Git
+
+Our team's git workflow is inspired by the guide provided [here]( https://www.robinwieruch.de/git-team-workflow) (we don't strictly follow these rules). Branches are named using the template `issueID-short-description` (e.g., `001-update-readme`), where `issueID` is the ID of the corresponding issue on our github project page, see [this guide](https://deepsource.io/blog/git-branch-naming-conventions/) for more information.  
+
+### Codebase
+
+The project structure of this github repository adheres to the Cookiecutter Data Science template provided [here](https://drivendata.github.io/cookiecutter-data-science/).
+
+### Coding Style
+
+This project uses the [PEP8 style guide](https://www.python.org/dev/peps/pep-0008/) for coding in python. The docstrings we use Google style, see, e.g., [here](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/index.html#google-vs-numpy).
