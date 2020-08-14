@@ -25,44 +25,45 @@ Depracated: In order to prepare (rename and re-zip) these zip-files, bash script
 The unpacked folder and file structure follows the convention below:
 
 ```
-synthetic_basic.zip
-│ synthetic_basic_001.pkl
-│ synthetic_basic_002.pkl
-│ synthetic_basic_003.pkl
-│ ...
-│ synthetic_basic_info.csv
-
-
-synthetic_soil.zip
-│ synthetic_soil_001.pkl
-│ synthetic_soil_002.pkl
-│ synthetic_soil_003.pkl
-│ ...
-│ synthetic_soil_info.csv
-
-
-synthetic_soil_weather.zip
-│ synthetic_soil_weather_001.pkl
-│ synthetic_soil_weather_002.pkl
-│ synthetic_soil_weather_003.pkl
-│ ...
-│ synthetic_soil_weather_info.csv
-
-
-synthetic_soil_weather_locations.zip
-│ synthetic_soil_weather_locations_001.pkl
-│ synthetic_soil_weather_locations_002.pkl
-│ synthetic_soil_weather_locations_003.pkl
-│ ...
-│ synthetic_soil_weather_locations_info.csv
-
-
-synthetic_weather.zip
-│ synthetic_weather_001.pkl
-│ synthetic_weather_002.pkl
-│ synthetic_weather_003.pkl
-│ ...
-│ synthetic_weather_info.csv
+data
+│
+└───processed
+│   
+└───raw
+    └───synthetic_basic.zip
+    │   │ synthetic_basic_001.pkl
+    │   │ synthetic_basic_002.pkl
+    │   │ synthetic_basic_003.pkl
+    │   │ ...
+    │   │ synthetic_basic_info.csv
+    │   
+    └───synthetic_soil.zip
+    │   │ synthetic_soil_001.pkl
+    │   │ synthetic_soil_002.pkl
+    │   │ synthetic_soil_003.pkl
+    │   │ ...
+    │   │ synthetic_soil_info.csv
+    │   
+    └───synthetic_soil_weather.zip
+    │   │ synthetic_soil_weather_001.pkl
+    │   │ synthetic_soil_weather_002.pkl
+    │   │ synthetic_soil_weather_003.pkl
+    │   │ ...
+    │   │ synthetic_soil_weather_info.csv
+    │   
+    └───synthetic_soil_weather_locations.zip
+    │   │ synthetic_soil_weather_locations_001.pkl
+    │   │ synthetic_soil_weather_locations_002.pkl
+    │   │ synthetic_soil_weather_locations_003.pkl
+    │   │ ...
+    │   │ synthetic_soil_weather_locations_info.csv
+    │   
+    └───synthetic_weather.zip
+        │ synthetic_weather_001.pkl
+        │ synthetic_weather_002.pkl
+        │ synthetic_weather_003.pkl
+        │ ...
+        │ synthetic_weather_info.csv
 ```
 
 Each dataset is accompanied by the file `synthetic_xxx_info.csv`, e.g., `synthetic_soil_info.csv`, containing a list of additional information. 
