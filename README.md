@@ -1,7 +1,16 @@
-# Aug20_epri
-For Team Epri at S2DS August 2020
+# Team EPRI
 
+This is the github repository for Team EPRI at S2DS August 2020.
 
+-----------
+
+## Table of Contents
+
+* [Data](https://github.com/S2DSLondon/Aug20_Epri#data)
+
+* [Conventions and Style](https://github.com/S2DSLondon/Aug20_Epri#conventions-and-style)
+
+-----------
 
 ## Data 
 
@@ -9,7 +18,48 @@ For the time being the data used in this project are synthetic data (generated b
 
 ### How to Get and Extract the Data
 
-Download the folder as a zip archive from this project's [box.com storage](https://app.box.com/folder/117614749421) provided by EPRI. Use the bash script provided at FIXME to extract the data. 
+For easier handling we use prepared zip-files which can be read without extracting them using the function `import_data.import_df_from_zip`. The prepared zip-files are located in our [google-drive](https://drive.google.com/drive/folders/1IByP1vFGRjsDTWvWETm523yIduE5Ao4E) and in EPRI's [box.com storage](https://app.box.com/folder/120323763205). It is also possible to use the extracted zip-folders (might be faster) using the function `import_data.import_df_from_dir`.
+
+In order to prepare (rename and re-zip) these zip-files, bash scripts are available under `/tools/`. Usually, this should not be necessary as prepared zip-files are available. Use these scripts with caution as some of them rename all files in the destination directory.
+
+The unpacked folder and file structure follows the convention below:
+
+```
+data
+│
+└───processed
+│   
+└───raw
+    └───synthetic_basic
+    │   │ synthetic_basic_1.csv
+    │   │ synthetic_basic_2.csv
+    │   │ synthetic_basic_3.csv
+    │   │ ...
+    │   
+    └───synthetic_soil
+    │   │ synthetic_soil_1.csv
+    │   │ synthetic_soil_2.csv
+    │   │ synthetic_soil_3.csv
+    │   │ ...
+    │   
+    └───synthetic_soil_weather
+    │   │ synthetic_soil_weather_1.csv
+    │   │ synthetic_soil_weather_2.csv
+    │   │ synthetic_soil_weather_3.csv
+    │   │ ...
+    │   
+    └───synthetic_soil_weather_locations
+    │   │ synthetic_soil_weather_locations_co_1.csv
+    │   │ synthetic_soil_weather_locations_co_2.csv
+    │   │ synthetic_soil_weather_locations_co_3.csv
+    │   │ ...
+    │   
+    └───synthetic_weather
+        │ synthetic_weather_1.csv
+        │ synthetic_weather_2.csv
+        │ synthetic_weather_3.csv
+        │ ...
+```
 
 ### Types of Synthetic Data
 
@@ -32,6 +82,22 @@ For each data point of the time series the following attributes are provided:
 | Power                   | Power                   | kW     |
 | Plane of array          | POA                     | W/m^2  |
 | Ambient Temperatur      | Tamb                    | °C     |
-| Wind                    | Wind                    | ??     |
-| Degradation rate / year | Degradation_rate_per_yr | -      |
+| Wind                    | Wind                    | m/s    |
+| Degradation rate / year | Degradation_rate_per_yr | %/year |
 | Soiling                 | soiling                 | -      |
+
+-----------
+
+## Conventions and Style 
+
+### Git
+
+Our team's git workflow is inspired by the guide provided [here]( https://www.robinwieruch.de/git-team-workflow) (we don't strictly follow these rules). Branches are named using the template `issueID-short-description` (e.g., `001-update-readme`), where `issueID` is the ID of the corresponding issue on our github project page, see [this guide](https://deepsource.io/blog/git-branch-naming-conventions/) for more information.  
+
+### Codebase
+
+The project structure of this github repository adheres to the Cookiecutter Data Science template provided [here](https://drivendata.github.io/cookiecutter-data-science/).
+
+### Coding Style
+
+This project uses the [PEP8 style guide](https://www.python.org/dev/peps/pep-0008/) for coding in python. The docstrings we use Google style, see, e.g., [here](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/index.html#google-vs-numpy).
