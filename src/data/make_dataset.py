@@ -179,6 +179,7 @@ def downsample_dataframe(df, offset='D', clip_method=None, night_method=None):
     return df.resample(offset).mean()
 
 
+
 def subsamples_generator(dataset, sub_number=100, sub_size_fraction=0.6):
 
     """
@@ -188,12 +189,9 @@ def subsamples_generator(dataset, sub_number=100, sub_size_fraction=0.6):
     Selects a specified number of continuous subsets of this time series,
     the subsets having a length that is a specified fraction of the input
     time series. Each subset is chosen to start at some random point of the
-    input time series. If input is a DataFrame, outputs one DataFrame of
-    length (number of subsamples * length of one subsample) of all the
-    subsamples pieced together, with all the original columns and one
-    additional column identifying the nth subsample. If input is a NumPy array
-    or a list, outputs a NumPy array of dimensions (number of subsamples,
-    length of one subsample) indexing the nth subsample on row n.
+    input time series. Outputs a list of DataFrames or lists (depending on
+    the input) of dimensions (number of subsamples, length of one subsample)
+    indexing the nth subsample on row n.
 
     Args:
         dataset (Pandas DataFrame, NumPy array or list): the time series from
@@ -208,10 +206,9 @@ def subsamples_generator(dataset, sub_number=100, sub_size_fraction=0.6):
 
 
     Returns:
-        Pandas DataFrame or NumPy array: if DataFrame, returns a DataFrame with
-        same columns as input plus one column identifying the nth subsample,
-        with all subsamples pieced together along the index axis. If NumPy
-        array or list, returns a NumPy array containing all the subsamples.
+        Returns a list containing all the subsamples in NumPy array (when
+        input is NumPy array or list) or pandas DataFrame if such was the
+        input format.
     """
 
     np.random.seed(42)
@@ -225,25 +222,8 @@ def subsamples_generator(dataset, sub_number=100, sub_size_fraction=0.6):
               "size is not between 0.0 and 1.0.")
         return
     sub_len = int(len(dataset) * sub_size_fraction)
-    if isinstance(dataset, pd.core.frame.DataFrame):
-        new_df = pd.DataFrame(columns=dataset.columns)
-        new_df["Sample_ID"] = ""
-    elif isinstance(dataset, list) or isinstance(dataset, np.ndarray):
-        new_list = np.zeros((1, sub_len))
-    else:
-        print("Error: this function only processes pandas dataframe, numpy " +
-              "list or list.")
-        return
+    new_list = []
     for i in range(0, sub_number):
         first_index = int(np.random.uniform(0, len(dataset)-sub_len))
-        if isinstance(dataset, pd.core.frame.DataFrame):
-            slide_df = dataset.iloc[first_index:first_index+sub_len].copy()
-            slide_df["Sample_ID"] = [i]*len(slide_df)
-            new_df = new_df.append(slide_df)
-        else:
-            new_list = np.vstack([new_list,
-                                  dataset[first_index:first_index+sub_len]])
-    if isinstance(dataset, pd.core.frame.DataFrame):
-        return new_df
-    else:
-        return new_list[1:]
+        new_list.append(dataset[first_index:first_index+sub_len])
+    return new_list
