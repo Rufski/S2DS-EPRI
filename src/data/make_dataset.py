@@ -48,7 +48,6 @@ def remove_clipping_with_universal_window(
         initial_size = len(time_series_df)
 
     clipping_df = time_series_df[time_series_df.Power >= max_power]
-    print(clipping_df.shape)
     if clipping_df.empty:
         if verbose:
             print("Power never exceeds max value; no data removed.")
