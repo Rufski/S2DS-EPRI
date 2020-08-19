@@ -151,3 +151,37 @@ def import_df_from_zip_pkl(path_to_zip, index=0, verbose=False):
 
     # return dataframe
     return data_frame
+
+
+def import_df_info_from_zip(path_to_zip, verbose=False):
+
+    """
+    Import the dataset info csv-file from a zipped dataset
+
+    Imports the dataset info as a pandas dataframe from the csv-file from
+    within a zipped dataset (without unzipping)
+
+        Args:
+            path_to_zip (str): path to the zip-file containing the dataset
+            verbose (bool, optional): print output if true, defaults to False
+
+        Returns:
+            data_frame (Pandas DataFrame): dataframe containing dataset info
+    """
+
+    zip_file = zf.ZipFile(path_to_zip)
+    list_fileinfos = zip_file.filelist
+    list_filenames = [file_in_zip.filename for file_in_zip
+                      in list_fileinfos if '.csv' in file_in_zip.filename]
+
+    if not list_filenames:
+        print("\nno dataset info file found!\n")
+
+    if verbose is True:
+        print("Found the following dataset info-files ", list_filenames)
+
+    path_to_csv = list_filenames[0]
+    data_frame = pd.read_csv(zip_file.open(path_to_csv))
+
+    # return dataframe
+    return data_frame
