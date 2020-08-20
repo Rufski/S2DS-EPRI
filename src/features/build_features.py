@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 def find_true_cleaning_events(df, inplace=False):
     """ Find actual cleaning events from soiling factor.
