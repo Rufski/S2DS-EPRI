@@ -45,8 +45,10 @@ def detect_cleaning_events_with_rollling_avg(
                 power signal, i.e., the relative difference between the two
                 rolling window averages (which are overlapping by
                 window_overlap)
-            cleaning_events (np.array): cleaning events identified in the
-                cleaning profile, array of the indices of the cleaning events
+            cleaning_events_index (np.array): index of cleaning events
+                identified in the cleaning profile
+            cleaning_events_height (np.array): peak height of cleaning events
+                identified in the cleaning profile
     """
 
     # get the left and right rolling window averages
@@ -62,11 +64,14 @@ def detect_cleaning_events_with_rollling_avg(
     cleaning_profile /= rolling_avg_l.to_numpy()[window_offset:]
 
     # find the peaks in the cleaning profile using scipy.signal.find_peaks
-    cleaning_events = find_peaks(cleaning_profile,
-                                 distance=cleaning_peak_distance,
-                                 prominence=cleaning_peak_prominence)[0]
+    cleaning_events_index = find_peaks(cleaning_profile,
+                                       distance=cleaning_peak_distance,
+                                       prominence=cleaning_peak_prominence)[0]
+
+    # get peak height of cleaning events
+    cleaning_events_height = cleaning_profile[cleaning_events_index]
 
     # shift by cleaning events by 1 in order to fit to power signal
-    cleaning_events += 1
+    cleaning_events_index += 1
 
-    return (cleaning_profile, cleaning_events)
+    return (cleaning_profile, cleaning_events_index, cleaning_events_height)
