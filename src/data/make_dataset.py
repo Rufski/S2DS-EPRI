@@ -142,8 +142,10 @@ def downsample_dataframe(df,
                          clip_method=None,
                          night_method=None,
                          power_sampling_function=np.mean,
-                         loss_sampling_function=lambda x: x[-1]):
-    """Downsamples the dataframe.
+                         loss_sampling_function='last'):
+    """
+    Downsamples the dataframe.
+
     Downsamples the DataFrame using inbuild resample function of pandas. The
     function has options for removing clipping and night time data. The
     argument <night_methods> can be set to None or 'basic' to either not remove
@@ -153,24 +155,26 @@ def downsample_dataframe(df,
     remove clipping data with flexible window respectively. If the optional
     arguments are not speficied, the function downsample to days with no data
     removal.
+
     A further optional parameters allows two functions to be specified --
     <power_sampling_function> is a function used to aggregate Power column of
     the DataFrame, and <loss_sampling_function> is function used to aggregate
     Degradation, Soiling, and Faults. By default numpy mean is used for the
     <power_sampling_function> and the last value is used for the
     <loss_sampling_function>.
-    Args:
-        df (Pandas DataFrame): a DataFrame with timedate as index
-        offset (str): Optional; offset string representing target downsampling
-        clip_method (str): Optional; string representing clipping removal
-            method
-        night_method (str): Optional; string representing night removal method
-        power_sampling_function (function): Optional; function to aggregate the
-            Power column
-        loss_sampling_function (function): Optional; function to aggregate the
-            Degradation, Soiling, Faults
-    Returns:
-        Pandas DataFrame: downsampled dataframe
+
+        Args:
+            df (pandas.DataFrame): a DataFrame with timedate as index
+            offset (str): Optional; offset string representing target downsampling
+            clip_method (str): Optional; string representing clipping removal
+                method
+            night_method (str): Optional; string representing night removal method
+            power_sampling_function (function): Optional; function to aggregate the
+                Power column
+            loss_sampling_function (function): Optional; function to aggregate the
+                Degradation, Soiling, Faults
+        Returns:
+            pandas.DataFrame: downsampled dataframe
     """
     if night_method == 'basic':
         df = remove_night_time_data(df)
