@@ -7,7 +7,7 @@ import pandas as pd
 from scipy.signal import find_peaks
 
 
-def detect_cleaning_events_with_rollling_avg(
+def detect_cleaning_events_with_rolling_avg(
         power_signal,
         window_size_l=3,
         window_size_r=3,
@@ -78,9 +78,9 @@ def detect_cleaning_events_with_rollling_avg(
     return (cleaning_profile, cleaning_events_index, cleaning_events_height)
 
 
-def find_soiling_profile(df, cleaning_events_index, cleaning_events_height):
+def find_soiling_factor_with_rolling_avg(df, cleaning_events_index, cleaning_events_height):
     """
-    Detect cleaning profile from cleaning events and cleaning gains.
+    Detect soiling factor from cleaning events and cleaning gains.
 
         Args:
             df (pandas.DataFrame): time series of the power signal 
@@ -103,3 +103,19 @@ def find_soiling_profile(df, cleaning_events_index, cleaning_events_height):
     output_df = pd.DataFrame(index = df.index)
     output_df['soiling_factor'] = np.append(slopes, np.ones( (df.index[-1] - start_of_soiling).days))
     return output_df
+
+
+def fing_soiling_profile_with_rolling_avg(df):
+    """
+    Calculate the soiling profile for a power signal.
+
+    The function uses rolling average to detect cleaning events.
+
+        Args:
+            df (pandas.DataFrame): time series of the power signal 
+        Returns:
+            pandas.DataFrame: with the index matching the index of df and the
+                estimated soiling factor in the column 'soiling_factor'
+    """
+    _, cleaning_index, cleaning_heights = detect_cleaning_events_with_rolling_avg(df.Power)
+    return find_soiling_factor_with_rolling_avg(df, cleaning_index, cleaning_heights)
