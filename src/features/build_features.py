@@ -23,7 +23,7 @@ def find_true_cleaning_events(df, inplace=False):
     if inplace:
         df['soiling_loss'] = np.concatenate((np.array([first_value - 1]),
             soiling_factor[1:]-soiling_factor[:-1]))
-        df['cleaning_event'] = (df['soiling_loss'] > 0).astype(int)
+        df['cleaning_event'] = (df['soiling_loss'] >= 0).astype(int)
 
         return df
     else:
