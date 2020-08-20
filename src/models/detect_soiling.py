@@ -92,7 +92,6 @@ def find_soiling_profile(df, cleaning_events_index, cleaning_events_height):
             pandas.DataFrame: with the index matching the index of df and the
                 estimated soiling factor in the column 'soiling_factor'
     """
-    def find_soiling_profile(df, cleaning_events_index, cleaning_events_height):
     slopes = np.array([1.])
     start_of_soiling = df.index[0]
     for i in range(len(cleaning_events_index)):
