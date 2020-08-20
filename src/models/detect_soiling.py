@@ -3,6 +3,7 @@ functions for detecting the cleaning events and obtaining the soiling profile
 """
 
 import numpy as np
+import pandas as pd
 from scipy.signal import find_peaks
 
 
@@ -75,3 +76,31 @@ def detect_cleaning_events_with_rollling_avg(
     cleaning_events_index += 1
 
     return (cleaning_profile, cleaning_events_index, cleaning_events_height)
+
+
+def find_soiling_profile(df, cleaning_events_index, cleaning_events_height):
+    """
+    Detect cleaning profile from cleaning events and cleaning gains.
+
+        Args:
+            df (pandas.DataFrame): time series of the power signal 
+            cleaning_events_index (np.array): index of cleaning events
+                identified in the cleaning profile
+            cleaning_events_height (np.array): peak height of cleaning events
+                identified in the cleaning profile
+        Returns:
+            pandas.DataFrame: with the index matching the index of df and the
+                estimated soiling factor in the column 'soiling_factor'
+    """
+    def find_soiling_profile(df, cleaning_events_index, cleaning_events_height):
+    slopes = np.array([1.])
+    start_of_soiling = df.index[0]
+    for i in range(len(cleaning_events_index)):
+        end_of_soiling = df.index[cleaning_events_index[i]]
+        soiling_duration = (end_of_soiling - start_of_soiling).days
+        slopes = np.append(slopes, 1 - np.arange(soiling_duration) * (cleaning_events_height[i]/soiling_duration) )
+        slopes[-1] = 1
+        start_of_soiling = end_of_soiling
+    output_df = pd.DataFrame(index = df.index)
+    output_df['soiling_factor'] = np.append(slopes, np.ones( (df.index[-1] - start_of_soiling).days))
+    return output_df
