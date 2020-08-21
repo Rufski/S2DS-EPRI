@@ -5,6 +5,7 @@ functions for detecting the cleaning events and obtaining the soiling profile
 import numpy as np
 import pandas as pd
 from scipy.signal import find_peaks
+from src.features.build_features import find_true_cleaning_events
 
 
 def detect_cleaning_events_with_rolling_avg(
@@ -119,3 +120,97 @@ def fing_soiling_profile_with_rolling_avg(df):
     """
     _, cleaning_index, cleaning_heights = detect_cleaning_events_with_rolling_avg(df.Power)
     return find_soiling_factor_with_rolling_avg(df, cleaning_index, cleaning_heights)
+
+
+def get_accuracy_of_predicted_cleaning_events(
+        df,
+        prediction=None,
+        tolerance_in_days=0,
+        amplitude=True):
+
+    """
+    Quantify the accuracy of the cleaning event detection
+
+    returns different quantities for the accuracy of the cleaning event
+    detection:
+
+        Args:
+            df (pandas.DataFrame): dataframe containing the power signal and
+                the soiling profile
+            prediction (tuple): tuple containing two arrays: indices of the
+                predicted cleaning events and their amplitudes, if it is None
+                then detect_cleaning_events_with_rolling_avg() is called to
+                obtain these two arrays, if amplitude is False then the
+                prediction tuple should only contain the indices array
+            tolerance_in_days: how close the predicted index has to be to the
+                actual cleaning event, defaults to 0
+            ampitude(bool): if the cleaning amplitude should also be used in
+                the calculation, cleaning amplitude corresponds to a weight of
+                the individual cleaning events
+
+        Returns:
+            dict_results (dictionary): dictionary containing the results
+    """
+
+    if prediction is None:
+        profile_predict, index_predict, peakheight_predict = \
+            detect_cleaning_events_with_rolling_avg(df['Power'])
+    elif prediction is not None and amplitude is True:
+        index_predict, peakheight_predict = prediction[0], prediction[1]
+    elif prediction is not None and amplitude is False:
+        index_predict = prediction[0]
+
+    df_true = find_true_cleaning_events(df)
+    index_true = np.where(df_true['cleaning_event'] == 1)[0]
+
+    if amplitude is True:
+        peakheight_true = df_true['soiling_loss'].to_numpy()[index_true]
+
+    index_predict_in_true = np.full((index_predict.shape), False, dtype=bool)
+    index_true_in_predict = np.full((index_true.shape), False, dtype=bool)
+
+    for index_shift in range(-tolerance_in_days, tolerance_in_days+1):
+        index_predict_in_true = np.logical_or(
+                np.in1d(index_predict, index_true+index_shift),
+                index_predict_in_true)
+        index_true_in_predict = np.logical_or(
+                np.in1d(index_true+index_shift, index_predict),
+                index_true_in_predict)
+
+    n_predict_tot = index_predict.size
+    n_true_tot = index_true.size
+    n_predict_in_true = np.sum(index_predict_in_true)
+    n_true_in_predict = np.sum(index_true_in_predict)
+
+    if amplitude is True:
+        explained_amplitude_predict = np.sum(
+            peakheight_predict[index_predict_in_true]) / \
+            np.sum(peakheight_true)
+        explained_amplitude_true = np.sum(
+            peakheight_true[index_true_in_predict]) / \
+            np.sum(peakheight_true)
+
+    n_true_pos = n_predict_in_true
+    n_false_pos = n_predict_tot - n_predict_in_true
+    n_false_neg = n_true_tot - n_true_in_predict
+
+    p_cods = n_true_pos / (n_true_pos + n_false_pos)
+    r_cods = n_true_pos / (n_true_pos + n_false_neg)
+    f1_cods = 2 * r_cods * p_cods / (r_cods+p_cods)
+
+    dict_results = {
+        'n_true_pos': n_true_pos,
+        'n_false_pos': n_false_pos,
+        'n_false_neg': n_false_neg,
+        'r_cods': r_cods,
+        'p_cods': p_cods,
+        'f1_cods': f1_cods,
+    }
+
+    if amplitude is True:
+        dict_results['explained_amplitude_predict'] = \
+            explained_amplitude_predict
+        dict_results['explained_amplitude_true'] = \
+            explained_amplitude_true
+
+    return dict_results
