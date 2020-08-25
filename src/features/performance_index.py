@@ -1,5 +1,6 @@
 """
-test
+this module contains functions for normalizing the power signal and obtaining
+the performance index
 """
 
 import numpy as np
@@ -38,7 +39,6 @@ def normalize_power_signal(
         clipping_window_limits = return_universal_clipping_window(data_frame)
     elif clipping == 'flexible':
         clipping_window_limits = return_flexible_clipping_window(data_frame)
-        day_of_year = data_frame.index.dayofyear.to_numpy()
 
     # throw away cloudy periods
     if clearsky is True:
@@ -51,17 +51,11 @@ def normalize_power_signal(
             print('{:.2f} % of data remaining after clearsky '
                   'detection.'.format(data_frame.Power.size / data_size_init))
 
-    # throw away nighttime data
-    if nighttime is True:
-        data_frame = remove_night_time_data(data_frame)
-        if verbose is True:
-            print('{:.2f} % of data remaining after night-time '
-                  'removal.'.format(data_frame.Power.size / data_size_init))
-
     # throw away clipping data
     if clipping == 'basic':
         data_frame = data_frame[data_frame.Power < 1827.0]
     elif clipping == 'flexible':
+        day_of_year = data_frame.index.dayofyear.to_numpy()
         data_frame = data_frame[
             (data_frame.minute_of_day < clipping_window_limits[0][day_of_year - 1]) |
             (data_frame.minute_of_day > clipping_window_limits[1][day_of_year - 1])
@@ -74,6 +68,13 @@ def normalize_power_signal(
     if (clipping is not None) and (verbose is True):
         print('{:.2f} % of data remaining after clipping '
               'removal.'.format(data_frame.Power.size / data_size_init))
+
+    # throw away nighttime data
+    if nighttime is True:
+        data_frame = remove_night_time_data(data_frame)
+        if verbose is True:
+            print('{:.2f} % of data remaining after night-time '
+                  'removal.'.format(data_frame.Power.size / data_size_init))
 
     # calculate temperature factor
     t_cell = np.exp(t_cell_a + t_cell_b * data_frame.Wind.to_numpy()) *\
