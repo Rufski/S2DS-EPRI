@@ -112,7 +112,7 @@ def import_df_from_dir_csv(path_to_dir, index=0, datetime=True, verbose=False):
     return data_frame
 
 
-def import_df_from_zip_pkl(path_to_zip, index=0, verbose=False):
+def import_df_from_zip_pkl(path_to_zip, index=0, verbose=False, minofday=True):
 
     """
     Import a timeseries from a zipped pickled dataframe
@@ -141,8 +141,10 @@ def import_df_from_zip_pkl(path_to_zip, index=0, verbose=False):
     data_frame = pd.read_pickle(zip_file.open(path_to_pkl), compression='gzip')
     time_01 = time.time()
 
-    data_frame['minute_of_day'] = data_frame.index.minute + \
-        data_frame.index.hour * 60
+    # add column for minute of day
+    if minofday is True:
+        data_frame['minute_of_day'] = data_frame.index.minute + \
+            data_frame.index.hour * 60
 
     # print how much time read_pickle needs
     if verbose is True:
