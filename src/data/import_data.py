@@ -36,7 +36,6 @@ def import_df_from_zip_csv(path_to_zip, index=0, datetime=True, verbose=False):
                      in list_fileinfo if '.csv' in file_in_zip.filename]
 
     list_filename.sort()
-    print(list_filename)
     path_to_csv = list_filename[index]
 
     if verbose is True:
@@ -94,7 +93,6 @@ def import_df_from_dir_csv(path_to_dir, index=0, datetime=True, verbose=False):
     list_files_csv = [file_in_dir for file_in_dir
                       in list_files_all if 'csv' in file_in_dir]
     list_files_csv.sort()
-    print(list_files_csv)
     path_to_csv = '{0:s}/{1:s}'.format(path_to_dir, list_files_csv[index])
 
     if verbose is True:
@@ -151,7 +149,6 @@ def import_df_from_zip_pkl(path_to_zip, index=0, verbose=False, minofday=True):
                      in list_fileinfos if '.pkl' in file_in_zip.filename]
 
     list_filename.sort()
-    print(list_filename)
     path_to_pkl = list_filename[index]
 
     if verbose is True:
@@ -240,7 +237,6 @@ def import_cods_instance_from_zip_pkl(path_to_zip, index=0, verbose=False):
     path_to_pkl = list_filename[index]
 
     list_filename.sort()
-    print(list_filename)
     path_to_pkl = list_filename[index]
 
     if verbose is True:
