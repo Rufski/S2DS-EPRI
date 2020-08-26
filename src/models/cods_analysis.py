@@ -52,5 +52,7 @@ def load_cods_results(synth_type, index=0, clipping="basic", verbose=False):
     except:
         if verbose:
             print("No available synthetic dataset, the availabe types are 'basic', 'soil', 'soil_weather', 'weather'")
-
+ 
+    cods_instance = pickle.load(_file)
+    
     return cods_instance
