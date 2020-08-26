@@ -36,18 +36,18 @@ def cods_with_bootstrap(synth_type, index=0, realizations=512, clipping="basic",
     print("--- %s min ---" %((end_time - start_time)/60.)) # remove?
     
     # save results
-    _file = open("../../data/processed/cods_results_" + synth_type + "_" + str(index) + "_" + str(realizations) + ".pkl", "wb")
+    _file = open("../../data/processed/cods_results_" + synth_type + "_" + str(index) + "_" + str(clipping) + ".pkl", "wb")
     pickle.dump(cods_instance , _file)
     
     return
 
-def load_cods_results(synth_type, index=0, realizations=512, verbose=False):
+def load_cods_results(synth_type, index=0, clipping="basic", verbose=False):
     """
 
     """
     # Load results
     try:
-        _file = open("../../data/processed/cods_results_" + synth_type + "_" + str(index) + "_" + str(realizations) + ".pkl", "rb")
+        _file = open("../../data/processed/cods_results_" + synth_type + "_" + str(index) + "_" + str(clipping) + ".pkl", "rb")
         print (_file)
     except:
         if verbose:
