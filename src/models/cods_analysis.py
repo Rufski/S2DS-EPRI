@@ -24,7 +24,7 @@ def cods_with_bootstrap(synth_type, index=0, realizations=512, clipping="basic",
         cods_instance = rdtools.soiling.cods_analysis(df.PI_clipping_basic)
     elif clipping=="flexible":
         cods_instance = rdtools.soiling.cods_analysis(df.PI_clipping_flexible)
-    elif clippling=="universal":
+    elif clipping=="universal":
         cods_instance = rdtools.soiling.cods_analysis(df.PI_clipping_universal)
     else:
         if verbose==True:
