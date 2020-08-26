@@ -155,14 +155,9 @@ def load_cods_results(synth_type, index=0, clipping="basic", verbose=False):
     """
 
     """
-    # Load results
-    try:
-        _file = open("../../data/processed/cods_results_" + synth_type + "_" + str(index) + "_" + str(clipping) + ".pkl", "rb")
-        print (_file)
-    except:
-        if verbose:
-            print("No available synthetic dataset, the availabe types are 'basic', 'soil', 'soil_weather', 'weather'")
- 
-    cods_instance = pickle.load(_file)
-    
+    path = ("../data/processed/cods_results_" + synth_type
+             + "_r" + str(realizations) + "_c" + clipping + "_o" + outlier + ".zip")
+
+    cods_instance = import_cods_instance_from_zip_pkl(path, index=index, verbose=verbose)
+
     return cods_instance
