@@ -6,7 +6,7 @@ import os
 import zipfile as zf
 import time
 import pandas as pd
-
+import pickle
 
 def import_df_from_zip_csv(path_to_zip, index=0, datetime=True, verbose=False):
 
@@ -187,3 +187,44 @@ def import_df_info_from_zip(path_to_zip, verbose=False):
 
     # return dataframe
     return data_frame
+
+
+def import_cods_instance_from_zip_pkl(path_to_zip, index=0, verbose=False):
+
+    """
+    Import a pickled CODS results instance from a zip archive
+
+    Extracts a cods instance from the pickle (compressed using gzip)
+    which is saved within a zipped folder
+
+        Args:
+            path_to_zip (str): path to the zip-file containing the pickled
+                cods instance
+            index (int, optional): index (0-49) of the desired file, defaults
+            to 0, ie, the first timeseries in the dataset
+            verbose (bool, optional): print output if true, defaults to False
+
+        Returns:
+            cods_instance (Python Class Instance): unpickled cods_instance
+    """
+
+    # unpickle instance from within within zip
+    time_00 = time.time()
+    zip_file = zf.ZipFile(path_to_zip)
+    list_fileinfos = zip_file.filelist
+    list_filenames = [file_in_zip.filename for file_in_zip
+                      in list_fileinfos if '.pkl' in file_in_zip.filename]
+    path_to_pkl = list_filenames[index]
+
+    infile = zip_file.open(path_to_pkl)
+    cods_instance = pickle.load(infile, compression='gzip')
+    infile.close()
+    time_01 = time.time()
+
+    # print how much time read_pickle needs
+    if verbose is True:
+        print("time for importing dataframe: "
+              "{:.2f} seconds".format(time_01 - time_00))
+
+    # return dataframe
+    return cods_instance
