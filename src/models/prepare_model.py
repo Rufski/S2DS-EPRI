@@ -5,14 +5,13 @@ from sklearn.model_selection import train_test_split
 from src.data.import_data import import_df_from_zip_pkl
 
 
-def load_and_prepare_PI_data(data_dir_path,
+def load_PI_data(data_dir_path,
                              nr_files,
                              nr_years,
-                             train_valid_test_split = (0.70, 0.15, 0.15),
                              clipping = 'basic',
                              verbose=False):
     """
-    Loads normalised daily dataset and splits it into train, valid, and testing sets.
+    Loads normalised daily dataset from a zip of pickles. 
 
     The function removes 29th of February and expects collumns
     PI_clipping_basic, PI_clipping_flexible, and PI_clipping_universal.
@@ -27,15 +26,9 @@ def load_and_prepare_PI_data(data_dir_path,
                 either 'basic', 'flexible', or 'universal'
 
         Returns:
-            tuple: first three elements are the PI signals of train, valid, and
-                test sets, and the later three elements are the degradation
-                rates of the corresponding signals
-    """
-    
-    if np.sum(train_valid_test_split) != 1.:
-        print("Error")
-        return
-    
+            np.array: an array containing input datasets 
+            np.array: an array containing corresponding response variables
+    """ 
     column_name = 'PI_clipping_' + 'basic'
     
     X = np.empty((0, 365*nr_years), float)
@@ -49,6 +42,7 @@ def load_and_prepare_PI_data(data_dir_path,
         # Remove 29th February from time series
         df = df[(df.index.month != 2) | (df.index.day != 29)]
         df[column_name] = df[column_name].ffill()
+        df[column_name] = df[column_name].bfill()
 
         y = np.vstack([
             y,
@@ -57,10 +51,28 @@ def load_and_prepare_PI_data(data_dir_path,
 
     if verbose:
         print("All processed!")
+    return X, y 
         
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=train_valid_test_split[2], random_state=42)
+def split_data_training(X, y, train_valid_test_split = (0.70, 0.15, 0.15)):
+    """
+    Splits the data in trainig, validation, and testing subdatsets
+        Args:
+            X (np.array): an array containing input datasets 
+            y (np.array): an array containing corresponding response variables
+            train_valid_test_split (tuple of lenght 3, optional): proportions
+                of train, valid, and test sets   
+
+        Returns:
+            tuple: first three elements are the PI signals of train, valid, and
+                test sets, and the later three elements are the degradation
+                rates of the corresponding signals
+    """
+    if len(train_valid_test_split) !=3 or np.sum(train_valid_test_split) != 1.:
+        raise Exception('Argument <train_valid_test_split> needs to a tuple of length 3 whihc adds up to 1')
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=train_valid_test_split[2])
     valid_ratio = train_valid_test_split[1] / (1 - train_valid_test_split[2])
-    X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=valid_ratio, random_state=42) 
+    X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=valid_ratio) 
     
     return X_train, X_valid, X_test, y_train, y_valid, y_test
 
