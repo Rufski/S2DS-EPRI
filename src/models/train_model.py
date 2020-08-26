@@ -2,61 +2,58 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 
-def load_and_prepare_PI_data(data_dir_path,
-                             nr_files,
-                             nr_years,
-                             train_valid_test_split = (0.70, 0.15, 0.15),
-                             clipping = 'basic',
-                             verbose=False):
+def train_model(model,
+                X_train,
+                y_train,
+                X_valid,
+                y_valid,
+                run_index,
+                model_name,
+                log_dir_path,
+                checkpoint_dir_path,
+                nr_epochs,
+                save_freq=100,        
+                patience=300):
     """
-    Loads normalised daily dataset and splits it into train, valid, and testing sets.
-
-    The function removes 29th of February and expects collumns
-    PI_clipping_basic, PI_clipping_flexible, and PI_clipping_universal.
+    Train a keras model.
 
         Args:
-            data_dir_path (str): path to the zip of pickles of the datasets
-            nr_files (int): number of files in the zip
-            nr_years (int): number of years per signal
-            train_valid_test_split (tuple of lenght 3, optional): proportions
-                of train, valid, and test sets   
-            clipping (str, optional): clipping used to to compute PI, must be
-                either 'basic', 'flexible', or 'universal'
+            model (keras model): model to train
+            X_train (np.array): an array containg all of the training sets
+            y_train (np.array): an array containg corresponding response variables 
+            X_valid (np.array): an array containg all of the validation sets
+            y_valid (np.array): an array containg corresponding response variables 
+            run_index (int): index to separate different runs
+            model_name (str): name of the current model
+            log_dir_path (str): path to the dirctory where the logs will be stored
+            checkpoint_dir_path (str): path to the directory where the
+                checkpoints will be stored, the directory must exist
+            nr_epochs (int): number of epochs to train for
+            save_freq (int, optional): number of batches after which the model is saved
+            patience (int, optional): patience value for early stopping
 
-        Returns:
-            tuple: first three elements are the PI signals of train, valid, and
-                test sets, and the later three elements are the degradation
-                rates of the corresponding signals
+        Return:
+            str: the path to the checkpoint
     """
-    
-    if np.sum(train_valid_test_split) != 1.:
-        print("Error")
-        return
-    
-    column_name = 'PI_clipping_' + 'basic'
-    
-    X = np.empty((0, 365*nr_years), float)
-    y = np.empty((0, 365*nr_years), float)
-        
-    for i in range(nr_files):
-        if verbose:
-            print("Loading file #"+str(i)+" from dataset "+dataset.split("/")[-1])
-        
-        df = import_df_from_zip_pkl(data_dir_path, index=i, verbose=verbose, minofday=False)
-        # Remove 29th February from time series
-        df = df[(df.index.month != 2) | (df.index.day != 29)]
-        df[column_name] = df[column_name].ffill()
+    # Set the relevant callbacks    
+    log_path = log_dir_path + "/" + model_name + f"_run{run_index:03d}"  
+    checkpoint_path = checkpoint_dir_path + "/" + model_name + f"_run{run_index:03d}.h5"
 
-        y = np.vstack([
-            y,
-            np.array(df[(df.index.hour == 0) & (df.index.minute == 0)].Degradation)])
-        X = np.vstack([X, np.array(df[column_name])])
+    if nr_epochs < save_freq:
+        save_freq = nr_epochs
 
-    if verbose:
-        print("All processed!")
-        
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=train_valid_test_split[2], random_state=42)
-    valid_ratio = train_valid_test_split[1] / (1 - train_valid_test_split[2])
-    X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=valid_ratio, random_state=42) 
+    my_callbacks = [
+        tf.keras.callbacks.EarlyStopping(patience=patience),
+        tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path, save_freq=save_freq),
+        tf.keras.callbacks.TensorBoard(log_dir=log_path),
+    ]
     
-    return X_train, X_valid, X_test, y_train, y_valid, y_test
+    
+    # Train the model
+    model.fit(X_train, 
+              y_train,
+              epochs=nr_epochs,
+              validation_data=(X_valid, y_valid),
+              callbacks=my_callbacks)
+
+    return checkpoint_path
