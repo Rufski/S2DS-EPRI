@@ -3,10 +3,11 @@ module for data import and export functions
 """
 
 import os
-import zipfile as zf
 import time
-import pandas as pd
 import pickle
+import zipfile as zf
+import pandas as pd
+
 
 def import_df_from_zip_csv(path_to_zip, index=0, datetime=True, verbose=False):
 
@@ -33,7 +34,13 @@ def import_df_from_zip_csv(path_to_zip, index=0, datetime=True, verbose=False):
     list_fileinfo = zip_file.filelist
     list_filename = [file_in_zip.filename for file_in_zip
                      in list_fileinfo if '.csv' in file_in_zip.filename]
+
+    list_filename.sort()
+    print(list_filename)
     path_to_csv = list_filename[index]
+
+    if verbose is True:
+        print(f'\nimporting {path_to_csv:s}\n')
 
     time_00 = time.time()
     data_frame = pd.read_csv(
@@ -86,7 +93,12 @@ def import_df_from_dir_csv(path_to_dir, index=0, datetime=True, verbose=False):
     list_files_all = os.listdir(path_to_dir)
     list_files_csv = [file_in_dir for file_in_dir
                       in list_files_all if 'csv' in file_in_dir]
+    list_files_csv.sort()
+    print(list_files_csv)
     path_to_csv = '{0:s}/{1:s}'.format(path_to_dir, list_files_csv[index])
+
+    if verbose is True:
+        print(f'\nimporting {path_to_csv:s}\n')
 
     time_00 = time.time()
     data_frame = pd.read_csv(
@@ -135,9 +147,16 @@ def import_df_from_zip_pkl(path_to_zip, index=0, verbose=False, minofday=True):
     time_00 = time.time()
     zip_file = zf.ZipFile(path_to_zip)
     list_fileinfos = zip_file.filelist
-    list_filenames = [file_in_zip.filename for file_in_zip
-                      in list_fileinfos if '.pkl' in file_in_zip.filename]
-    path_to_pkl = list_filenames[index]
+    list_filename = [file_in_zip.filename for file_in_zip
+                     in list_fileinfos if '.pkl' in file_in_zip.filename]
+
+    list_filename.sort()
+    print(list_filename)
+    path_to_pkl = list_filename[index]
+
+    if verbose is True:
+        print(f'\nimporting {path_to_pkl:s}\n')
+
     data_frame = pd.read_pickle(zip_file.open(path_to_pkl), compression='gzip')
     time_01 = time.time()
 
@@ -173,16 +192,20 @@ def import_df_info_from_zip(path_to_zip, verbose=False):
 
     zip_file = zf.ZipFile(path_to_zip)
     list_fileinfos = zip_file.filelist
-    list_filenames = [file_in_zip.filename for file_in_zip
-                      in list_fileinfos if '.csv' in file_in_zip.filename]
+    list_filename = [file_in_zip.filename for file_in_zip
+                     in list_fileinfos if '.csv' in file_in_zip.filename]
 
-    if not list_filenames:
+    if not list_filename:
         print("\nno dataset info file found!\n")
 
     if verbose is True:
-        print("Found the following dataset info-files ", list_filenames)
+        print("Found the following dataset info-files ", list_filename)
 
-    path_to_csv = list_filenames[0]
+    path_to_csv = list_filename[0]
+
+    if verbose is True:
+        print(f'\nimporting {path_to_csv:s}\n')
+
     data_frame = pd.read_csv(zip_file.open(path_to_csv))
 
     # return dataframe
@@ -212,9 +235,16 @@ def import_cods_instance_from_zip_pkl(path_to_zip, index=0, verbose=False):
     time_00 = time.time()
     zip_file = zf.ZipFile(path_to_zip)
     list_fileinfos = zip_file.filelist
-    list_filenames = [file_in_zip.filename for file_in_zip
-                      in list_fileinfos if '.pkl' in file_in_zip.filename]
-    path_to_pkl = list_filenames[index]
+    list_filename = [file_in_zip.filename for file_in_zip
+                     in list_fileinfos if '.pkl' in file_in_zip.filename]
+    path_to_pkl = list_filename[index]
+
+    list_filename.sort()
+    print(list_filename)
+    path_to_pkl = list_filename[index]
+
+    if verbose is True:
+        print(f'\nimporting {path_to_pkl:s}\n')
 
     infile = zip_file.open(path_to_pkl)
     cods_instance = pickle.load(infile)
