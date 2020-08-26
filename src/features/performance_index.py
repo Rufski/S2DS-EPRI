@@ -33,6 +33,14 @@ def normalize_power_signal(
     t_cell_shift = 25.
     clearsky_window_size = 15
     data_size_init = data_frame.Power.size
+    if poa_reference is None:
+        poa_reference = data_frame.POA
+
+    # calculate temperature factor
+    t_cell = np.exp(t_cell_a + t_cell_b * data_frame.Wind.to_numpy()) *\
+        data_frame.POA.to_numpy() + data_frame.Tamb.to_numpy() + t_cell_c *\
+        data_frame.POA.to_numpy() / 1000.
+    t_factor = 1 + gamma * (t_cell - t_cell_shift)
 
     # calculate clipping mask for throwing away clipped data afterward
     if clipping == 'universal':
@@ -42,8 +50,6 @@ def normalize_power_signal(
 
     # throw away cloudy periods
     if clearsky is True:
-        if poa_reference is None:
-            poa_reference = data_frame.POA
         clearsky_mask = detect_clearsky(data_frame.POA, poa_reference,
                                         data_frame.index, clearsky_window_size)
         data_frame = data_frame[clearsky_mask]
@@ -76,20 +82,17 @@ def normalize_power_signal(
             print('{:.2f} % of data remaining after night-time '
                   'removal.'.format(data_frame.Power.size / data_size_init))
 
-    # calculate temperature factor
-    t_cell = np.exp(t_cell_a + t_cell_b * data_frame.Wind.to_numpy()) *\
-        data_frame.POA.to_numpy() + data_frame.Tamb.to_numpy() + t_cell_c *\
-        data_frame.POA.to_numpy() / 1000.
-    t_factor = 1 + gamma * (t_cell - t_cell_shift)
-
     # calculate expected power and normalize
-    p_expected = data_frame.POA * p_ref / 1000. * t_factor
+    if clearsky is True:
+        poa_reference = poa_reference[clearsky_mask]
+        t_factor = t_factor[clearsky_mask]
+    p_expected = poa_reference * p_ref / 1000. * t_factor
     p_norm = data_frame.Power / p_expected
 
     # calculate daily aggregate with POA as weight function
-    p_norm_daily = p_norm * data_frame.POA
+    p_norm_daily = p_norm * poa_reference
     p_norm_daily = p_norm_daily.resample('D').sum()
-    p_norm_daily /= data_frame.POA.resample('D').sum()
+    p_norm_daily /= poa_reference.resample('D').sum()
 
     # remove outliers according to threshold
     p_norm_daily = p_norm_daily[p_norm_daily >= outlier_threshold]
