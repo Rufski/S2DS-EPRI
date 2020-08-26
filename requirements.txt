@@ -1,3 +1,4 @@
+pvlib==0.7.2
 arch==4.15
 astor==0.8.1
 fbprophet==0.6
