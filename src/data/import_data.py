@@ -7,7 +7,7 @@ import time
 import pickle
 import zipfile as zf
 import pandas as pd
-
+import pickle
 
 def import_df_from_zip_csv(path_to_zip, index=0, datetime=True, verbose=False):
 
