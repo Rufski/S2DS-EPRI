@@ -54,16 +54,18 @@ def cods_with_bootstrap(synthetic_type, index=0, realizations=512, clipping="bas
     
     return None
 
-def load_cods_results(synth_type, index=0, realizations=512, verbose=False):
+def load_cods_results(synth_type, index=0, clipping="basic", verbose=False):
     """
 
     """
     # Load results
     try:
-        _file = open("../../data/processed/cods_results_" + synth_type + "_" + str(index) + "_" + str(realizations) + ".pkl", "rb")
+        _file = open("../../data/processed/cods_results_" + synth_type + "_" + str(index) + "_" + str(clipping) + ".pkl", "rb")
         print (_file)
     except:
         if verbose:
             print("No available synthetic dataset, the availabe types are 'basic', 'soil', 'soil_weather', 'weather'")
-
+ 
+    cods_instance = pickle.load(_file)
+    
     return cods_instance
