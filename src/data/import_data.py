@@ -217,7 +217,7 @@ def import_cods_instance_from_zip_pkl(path_to_zip, index=0, verbose=False):
     path_to_pkl = list_filenames[index]
 
     infile = zip_file.open(path_to_pkl)
-    cods_instance = pickle.load(infile, compression='gzip')
+    cods_instance = pickle.load(infile)
     infile.close()
     time_01 = time.time()
 

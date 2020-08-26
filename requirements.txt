@@ -5,7 +5,7 @@ filterpy==1.4.5
 jupyter==1.0.0
 keras==2.4.3
 keras-applications==1.0.8
-matplotlib==3.0.0
+matplotlib==3.3.0
 mdp==3.6
 mosek==9.2.18
 numpy==1.19.1
