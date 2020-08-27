@@ -6,10 +6,9 @@ from src.data.import_data import import_df_from_zip_pkl
 
 
 def load_PI_data(data_dir_path,
-                             nr_files,
-                             nr_years,
-                             clipping = 'basic',
-                             verbose=False):
+                 nr_files,
+                 nr_years,
+                 verbose=False):
     """
     Loads normalised daily dataset from a zip of pickles. 
 
@@ -22,14 +21,12 @@ def load_PI_data(data_dir_path,
             nr_years (int): number of years per signal
             train_valid_test_split (tuple of lenght 3, optional): proportions
                 of train, valid, and test sets   
-            clipping (str, optional): clipping used to to compute PI, must be
-                either 'basic', 'flexible', or 'universal'
 
         Returns:
             np.array: an array containing input datasets 
             np.array: an array containing corresponding response variables
     """ 
-    column_name = 'PI_clipping_' + 'basic'
+    column_name = 'PI_clipping_basic'
     
     X = np.empty((0, 365*nr_years), float)
     y = np.empty((0, 365*nr_years), float)
@@ -106,6 +103,7 @@ def create_fully_connected_model(input_size,
     model.add(tf.keras.layers.Dense(input_size, kernel_initializer="he_normal", use_bias=False))
     model.add(tf.keras.layers.BatchNormalization())
     model.add(tf.keras.layers.Activation(hidden_activation))
+    model.add(tf.keras.layers.Dropout(0.2))
 
     # Add the hidden layers
     for size in hidden_layers:
