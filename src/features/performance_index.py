@@ -10,6 +10,7 @@ from pvlib.clearsky import detect_clearsky
 def normalize_power_signal(
         data_frame,
         poa_reference=None,
+        clipping_threshold=1825.,
         clearsky=True,
         verbose=False):
 
@@ -25,6 +26,8 @@ def normalize_power_signal(
                 defaults to None (then data_frame.POA = sensor irradiance
                 is used)
                 defaults to 0, ie, the first timeseries in the dataset
+            clipping_threshold (float, optional): threshold for clipping,
+                defaults to 1825
             clearsky (bool, optional): if true detect_clearsky() from pvlib is
                 used to throw out cloudy datapoints
             verbose (bool, optional): print output if true, defaults to False
@@ -68,7 +71,9 @@ def normalize_power_signal(
     # calculate clipping mask for throwing away clipped data afterward
     data_frame_temp = data_frame[clearsky_mask]
     data_frame_temp = data_frame_temp[nighttime_mask]
-    clipping_mask = data_frame_temp.Power < 1800.0
+
+    # inbuilt number for the clipping threshold
+    clipping_mask = data_frame_temp.Power < clipping_threshold
 
     # throw away cloudy, nighttime, and clipped periods
     p_norm = p_norm[clearsky_mask]
