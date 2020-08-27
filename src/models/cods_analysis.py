@@ -1,4 +1,5 @@
 from src.data.import_data import import_df_from_zip_pkl, import_df_info_from_zip, import_cods_instance_from_zip_pkl
+from src.data.features.performance_index import detect_pi_outliers
 from sklearn.metrics import mean_squared_error
 import rdtools
 import pickle
@@ -26,10 +27,10 @@ def cods_with_bootstrap_extra(synthetic_type, index=0, realizations=512, clippin
     
     # Initialize instance
     if clipping=="basic":
+        if outlier_threshold != 0.:
+            outlier_mask, n, p = detect_pi_outliers(df.PI_clipping_basic, threshold_min = outlier_threshold, threshold_max = 1.,  verbose=verbose)
         cods_n = 1
-        print(df.PI_clipping_basic.isna().sum())
-        df[df.PI_clipping_basic<outlier_threshold] = np.nan
-        print(df.PI_clipping_basic.isna().sum())
+        df = df[outlier_mask] = np.nan
         cods_instance = rdtools.soiling.cods_analysis(df.PI_clipping_basic)
     elif clipping=="flexible":
         cods_n = 2
@@ -50,8 +51,7 @@ def cods_with_bootstrap_extra(synthetic_type, index=0, realizations=512, clippin
     print("--- %s min ---" %((end_time - start_time)/60.)) # remove?
     
     # save results
-    type_name = (synthetic_type, synthetic_type + '_extra')[extra == True] 
-    _file = open(f'../../data/processed/new/cods_results_{synthetic_type:s}_extra_i{str(index).zfill(3):s}_r{str(realizations).zfill(3):s}_c{cods_n:d}.pkl', "wb")
+    _file = open(f'../../data/processed/new/new/cods_results_{synthetic_type:s}_extra_i{str(index).zfill(3):s}_r{str(realizations).zfill(3):s}_c{cods_n:d}.pkl', "wb")
     pickle.dump(cods_instance , _file)
     
     return None
@@ -75,10 +75,10 @@ def cods_with_bootstrap_uniform(synthetic_type, index=0, realizations=512, clipp
     
     # Initialize instance
     if clipping=="basic":
+        if outlier_threshold != 0.:
+            outlier_mask, n, p = detect_pi_outliers(df.PI_clipping_basic, threshold_min = outlier_threshold, threshold_max = 1.,  verbose=verbose)
         cods_n = 1
-        print(df.PI_clipping_basic.isna().sum())
-        df[df.PI_clipping_basic<outlier_threshold] = np.nan
-        print(df.PI_clipping_basic.isna().sum())
+        df = df[outlier_mask] = np.nan
         cods_instance = rdtools.soiling.cods_analysis(df.PI_clipping_basic)
     elif clipping=="flexible":
         cods_n = 2
@@ -99,8 +99,7 @@ def cods_with_bootstrap_uniform(synthetic_type, index=0, realizations=512, clipp
     print("--- %s min ---" %((end_time - start_time)/60.)) # remove?
     
     # save results
-    type_name = (synthetic_type, synthetic_type + '_extra')[extra == True] 
-    _file = open(f'../../data/processed/new/cods_results_{synthetic_type:s}_uniform_i{str(index).zfill(3):s}_r{str(realizations).zfill(3):s}_c{cods_n:d}.pkl', "wb")
+    _file = open(f'../../data/processed/new/new/cods_results_{synthetic_type:s}_uniform_i{str(index).zfill(3):s}_r{str(realizations).zfill(3):s}_c{cods_n:d}.pkl', "wb")
     pickle.dump(cods_instance , _file)
     
     return None
@@ -124,10 +123,10 @@ def cods_with_bootstrap(synthetic_type, index=0, realizations=512, clipping="bas
     
     # Initialize instance
     if clipping=="basic":
+        if outlier_threshold != 0.:
+            outlier_mask, n, p = detect_pi_outliers(df.PI_clipping_basic, threshold_min = outlier_threshold, threshold_max = 1.,  verbose=verbose)
         cods_n = 1
-        print(df.PI_clipping_basic.isna().sum())
-        df[df.PI_clipping_basic<outlier_threshold] = np.nan
-        print(df.PI_clipping_basic.isna().sum())
+        df = df[outlier_mask] = np.nan
         cods_instance = rdtools.soiling.cods_analysis(df.PI_clipping_basic)
     elif clipping=="flexible":
         cods_n = 2
@@ -148,8 +147,7 @@ def cods_with_bootstrap(synthetic_type, index=0, realizations=512, clipping="bas
     print("--- %s min ---" %((end_time - start_time)/60.)) # remove?
     
     # save results
-    type_name = (synthetic_type, synthetic_type + '_extra')[extra == True] 
-    _file = open(f'../../data/processed/new/cods_results_{synthetic_type:s}_i{str(index).zfill(3):s}_r{str(realizations).zfill(3):s}_c{cods_n:d}.pkl', "wb")
+    _file = open(f'../../data/processed/new/new/cods_results_{synthetic_type:s}_i{str(index).zfill(3):s}_r{str(realizations).zfill(3):s}_c{cods_n:d}.pkl', "wb")
     pickle.dump(cods_instance , _file)
     
     return None
