@@ -26,11 +26,8 @@ def normalize_power_signal(
                 defaults to None (then data_frame.POA = sensor irradiance
                 is used)
                 defaults to 0, ie, the first timeseries in the dataset
-<<<<<<< HEAD
             clipping_threshold (float, optional): threshold for clipping,
                 defaults to 1825
-=======
->>>>>>> update
             clearsky (bool, optional): if true detect_clearsky() from pvlib is
                 used to throw out cloudy datapoints
             verbose (bool, optional): print output if true, defaults to False
