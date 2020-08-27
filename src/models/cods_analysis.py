@@ -28,10 +28,10 @@ def cods_with_bootstrap_extra(synthetic_type, index=0, realizations=512, clippin
     # Initialize instance
     if clipping=="basic":
         if outlier_threshold != 0.:
-            print(df.PI_clipping_basic.isna().size)
+            print(df.PI_clipping_basic.isna().sum())
             outlier_mask, n, p = detect_pi_outliers(df.PI_clipping_basic, threshold_min = outlier_threshold, threshold_max = 1.,  verbose=verbose)
             df[outlier_mask] = np.nan
-            print(df.PI_clipping_basic.isna().size)
+            print(df.PI_clipping_basic.isna().sum())
         cods_n = 1
         cods_instance = rdtools.soiling.cods_analysis(df.PI_clipping_basic)
     elif clipping=="flexible":
@@ -78,10 +78,10 @@ def cods_with_bootstrap_uniform(synthetic_type, index=0, realizations=512, clipp
     # Initialize instance
     if clipping=="basic":
         if outlier_threshold != 0.:
-            print(df.PI_clipping_basic.isna().size)
+            print(df.PI_clipping_basic.isna().sum())
             outlier_mask, n, p = detect_pi_outliers(df.PI_clipping_basic, threshold_min = outlier_threshold, threshold_max = 1.,  verbose=verbose)
             df[outlier_mask] = np.nan
-            print(df.PI_clipping_basic.isna().size)
+            print(df.PI_clipping_basic.isna().sum())
         cods_n = 1
         cods_instance = rdtools.soiling.cods_analysis(df.PI_clipping_basic)
     elif clipping=="flexible":
@@ -128,10 +128,10 @@ def cods_with_bootstrap(synthetic_type, index=0, realizations=512, clipping="bas
     # Initialize instance
     if clipping=="basic":
         if outlier_threshold != 0.:
-            print(df.PI_clipping_basic.isna().size)
+            print(df.PI_clipping_basic.isna().sum())
             outlier_mask, n, p = detect_pi_outliers(df.PI_clipping_basic, threshold_min = outlier_threshold, threshold_max = 1.,  verbose=verbose)
             df[outlier_mask] = np.nan
-            print(df.PI_clipping_basic.isna().size)
+            print(df.PI_clipping_basic.isna().sum())
         cods_n = 1
         cods_instance = rdtools.soiling.cods_analysis(df.PI_clipping_basic)
     elif clipping=="flexible":
