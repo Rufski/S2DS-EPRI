@@ -1,5 +1,5 @@
 from src.data.import_data import import_df_from_zip_pkl, import_df_info_from_zip, import_cods_instance_from_zip_pkl
-from src.data.features.performance_index import detect_pi_outliers
+from src.features.performance_index import detect_pi_outliers
 from sklearn.metrics import mean_squared_error
 import rdtools
 import pickle
