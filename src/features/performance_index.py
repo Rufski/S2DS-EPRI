@@ -26,8 +26,11 @@ def normalize_power_signal(
                 defaults to None (then data_frame.POA = sensor irradiance
                 is used)
                 defaults to 0, ie, the first timeseries in the dataset
+<<<<<<< HEAD
             clipping_threshold (float, optional): threshold for clipping,
                 defaults to 1825
+=======
+>>>>>>> update
             clearsky (bool, optional): if true detect_clearsky() from pvlib is
                 used to throw out cloudy datapoints
             verbose (bool, optional): print output if true, defaults to False
@@ -119,7 +122,6 @@ def detect_pi_outliers(
             ratio_outliers (float): ratio of number of outliers to number
                 non-nan datapoints
     """
-
 
     signal_size = pi_signal.size
     signal_notna_size = pi_signal.notna().sum()
