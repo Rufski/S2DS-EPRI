@@ -5,22 +5,32 @@ the performance index
 
 import numpy as np
 from pvlib.clearsky import detect_clearsky
-from src.data.make_dataset import remove_night_time_data
-from src.data.make_dataset import remove_clipping_with_universal_window
-from src.data.make_dataset import return_universal_clipping_window
-from src.data.make_dataset import return_flexible_clipping_window
 
 
 def normalize_power_signal(
         data_frame,
         poa_reference=None,
         clearsky=True,
-        clipping='basic',
-        outlier_threshold=0.0,
         verbose=False):
 
     """
-    test
+    normalize the power signal of a time-series
+
+    normalization method is taken from Daniel Fregosi (method he uses for
+    rdtools
+
+        Args:
+            data_frame (Pandas DataFrame): dataframe of synthetic data
+            poa_reference (Pandas Series, optional): clearsky POA signal
+                defaults to None (then data_frame.POA = sensor irradiance
+                is used)
+                defaults to 0, ie, the first timeseries in the dataset
+            clearsky (bool, optional): if true detect_clearsky() from pvlib is
+                used to throw out cloudy datapoints
+            verbose (bool, optional): print output if true, defaults to False
+
+        Returns:
+            p_norm_daily (Pandas Series): normalized power signal
     """
 
     # initialize constant parameters for the calculation
@@ -56,10 +66,9 @@ def normalize_power_signal(
     nighttime_mask = data_frame[clearsky_mask].Power != -1.
 
     # calculate clipping mask for throwing away clipped data afterward
-    if clipping == 'basic':
-        data_frame_temp = data_frame[clearsky_mask]
-        data_frame_temp = data_frame_temp[nighttime_mask]
-        clipping_mask = data_frame_temp.Power < 1800.0
+    data_frame_temp = data_frame[clearsky_mask]
+    data_frame_temp = data_frame_temp[nighttime_mask]
+    clipping_mask = data_frame_temp.Power < 1800.0
 
     # throw away cloudy, nighttime, and clipped periods
     p_norm = p_norm[clearsky_mask]
@@ -70,16 +79,63 @@ def normalize_power_signal(
     poa_reference = poa_reference[clipping_mask]
 
     if verbose is True:
-        print(f'{p_norm.size/data_size_init:.2f} % of data remaining after '
-              'clearsky-detection, nighttime-removal, and clipping-removal')
+        print(f'{p_norm.size/data_size_init:.2f} % of datapoints remaining '
+              'after clearsky-detection, nighttime-removal, and clipping-'
+              'removal')
 
     # calculate daily aggregate with POA as weight function
     p_norm_daily = p_norm * poa_reference
     p_norm_daily = p_norm_daily.resample('D').sum()
     p_norm_daily /= poa_reference.resample('D').sum()
 
-    # remove outliers according to threshold
-    p_norm_daily = p_norm_daily[p_norm_daily >= outlier_threshold]
-
     # return normalize power (PI)
     return p_norm_daily
+
+def detect_pi_outliers(
+        pi_signal,
+        threshold_min=0.70,
+        threshold_max=1.00,
+        verbose=False):
+
+    """
+    detect outliers in pi signal
+
+    default threshold of 0.7 and 1.0 were found empirically
+
+        Args:
+            pi_signal (Pandas Series): performance index
+            threshold_min (float, optional): lower bound, defaults to 0.7
+            threshold_max (float, optional): upper bound, defaults to 1.0
+            verbose (bool, optional): print output if true, defaults to False
+
+        Returns:
+            mask_outliers (bool array): mask which only leaves the non-outliers
+            n_outliers (int): number of outliers
+            ratio_outliers (float): ratio of number of outliers to number
+                non-nan datapoints
+    """
+
+
+    signal_size = pi_signal.size
+    signal_notna_size = pi_signal.notna().sum()
+    n_nans_before = pi_signal.isna().sum()
+
+    if verbose is True:
+        print(f'\nPI signal contains {n_nans_before / signal_size * 100.:.2f} '
+              '% NaNs\n')
+
+    mask_outliers_above = pi_signal > threshold_max
+    mask_outliers_below = pi_signal < threshold_min
+    mask_outliers = np.logical_or(mask_outliers_above, mask_outliers_below)
+
+    n_outliers = mask_outliers.sum()
+    ratio_outliers = n_outliers / signal_notna_size
+    percent_outliers = ratio_outliers * 100.
+
+    if verbose is True:
+        print(f'detected {n_outliers:d} outliers (corresponging to '
+              '{percent_outliers:.2f} % of non-NaN PI signal)\n')
+
+    mask_outliers = np.invert(mask_outliers)
+
+    return mask_outliers, n_outliers, ratio_outliers
