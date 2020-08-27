@@ -114,7 +114,7 @@ def detect_pi_outliers(
             verbose (bool, optional): print output if true, defaults to False
 
         Returns:
-            mask_outliers (bool array): mask which only leaves the non-outliers
+            mask_outliers (bool array): mask which only leaves the outliers
             n_outliers (int): number of outliers
             ratio_outliers (float): ratio of number of outliers to number
                 non-nan datapoints
@@ -139,7 +139,5 @@ def detect_pi_outliers(
     if verbose is True:
         print(f'detected {n_outliers:d} outliers (corresponging to '
               '{percent_outliers:.2f} % of non-NaN PI signal)\n')
-
-    mask_outliers = np.invert(mask_outliers)
 
     return mask_outliers, n_outliers, ratio_outliers
