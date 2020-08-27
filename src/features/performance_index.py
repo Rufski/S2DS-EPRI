@@ -138,6 +138,6 @@ def detect_pi_outliers(
 
     if verbose is True:
         print(f'detected {n_outliers:d} outliers (corresponging to '
-              '{percent_outliers:.2f} % of non-NaN PI signal)\n')
+              f'{percent_outliers:.2f} % of non-NaN PI signal)\n')
 
     return mask_outliers, n_outliers, ratio_outliers
