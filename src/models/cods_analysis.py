@@ -226,18 +226,18 @@ def find_extrema_rmse(rmse, true, est):
 
     return (index_min, index_max, min_true, min_est, max_true, max_est)
 
-def cods_process_results_all(path_to_data, path_to_pi, path_to_cods, clipping="1",
+def cods_process_results_all(path_to_data, path_to_pi, path_to_cods, n_samples=50, clipping="1",
                              realizations=512, verbose=False):
-    rmse_pi = np.zeros(50)
-    rmse_rd = np.zeros(50)
-    rmse_sr = np.zeros(50)
+    rmse_pi = np.zeros(n_samples)
+    rmse_rd = np.zeros(n_samples)
+    rmse_sr = np.zeros(n_samples)
     pi_true = {}
     pi_est  = {}
-    rd_true = np.zeros(50)
-    rd_est  = np.zeros((50, 3))
+    rd_true = np.zeros(n_samples)
+    rd_est  = np.zeros((n_samples, 3))
     sr_true = {}
     sr_est  = {}
-    for i in range(0, 50):
+    for i in range(0, n_samples):
         _pi, _rd, _sr = cods_process_results_one(path_to_data, path_to_pi, path_to_cods, index=i, realizations=realizations,
                                                  clipping=clipping, verbose=verbose)
         rmse_pi[i]    = _pi[0]
@@ -295,15 +295,15 @@ def plot_pi(pi):
 
     return
 
-def plot_rd(rd):
+def plot_rd(rd, n_samples=50):
     fig, ax = plt.subplots(2, 1, figsize=(10, 7), sharex=True)
     fig.tight_layout()
 
     ax[0].plot(rd[1], "bo", label="true")
-    ax[0].errorbar(np.arange(0, 50), rd[2][:, 0], yerr=[rd[2][:, 0]-rd[2][:, 1], rd[2][:, 2]-rd[2][:, 0]],
+    ax[0].errorbar(np.arange(0, n_samples), rd[2][:, 0], yerr=[rd[2][:, 0]-rd[2][:, 1], rd[2][:, 2]-rd[2][:, 0]],
                    fmt="o", color="green", capsize=2.5)
     #ax[0].plot(rd[2][:, 0], "go", label="estimated")
-    #ax[0].fill_between(np.arange(0, 50), rd[2][:, 1], rd[2][:, 2], color="green", alpha=0.4)
+    #ax[0].fill_between(np.arange(0, n_samples), rd[2][:, 1], rd[2][:, 2], color="green", alpha=0.4)
     ax[1].plot(rd[1]-rd[2][:, 0], "ro")
     ax[0].legend()
 
