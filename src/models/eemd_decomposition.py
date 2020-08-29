@@ -19,6 +19,7 @@ def eemd_decomposition(signal, seed=True):
     eIMFs  = eemd.eemd(signal)
     _, res = eemd.get_imfs_and_residue()
     nIMFs  = eIMFs.shape[0]
+    
     return eIMFs, res, nIMFs
 
 def ft_imf(eIMFs, nIMFs):
@@ -67,6 +68,8 @@ def eemd_analysis(path_to_data, index=0, sampling_function=np.mean, seed=True, m
     df      = downsample_dataframe(df, night_method="basic", clip_method="universal",
                                    power_sampling_function=sampling_function)
     df["ln_power"] = np.log(df.Power.to_numpy())
+    if df["ln_power"].isnull().sum() > 0:
+        df["ln_power"][df["ln_power"].isnull()] = 0.0
     # Run EEMD
     eIMFs, res, nIMFs = eemd_decomposition(df.ln_power.to_numpy())
     # Fourier transfor
