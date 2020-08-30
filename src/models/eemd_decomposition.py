@@ -31,16 +31,17 @@ def ft_imf(eIMFs, nIMFs):
     return power_IMFs
 
 # m denotes the number of examples
-def gradientDescent(x, y, theta, alpha, m, numIterations=100000):
+def gradientDescent(x, y, theta, alpha, m, numIterations=100000, verbose=False):
     """
     Batch gradient descent for linear regression
     """
     for i in range(0, numIterations):
         hypothesis = np.transpose(np.matmul(x, theta))
-        #loss       = hypothesis - y
-        #cost       = np.sum(loss**2)/(2*m)
-        #print("Iteration %d | Cost: %f" % (i, cost))
-        theta      = theta - alpha/m*np.transpose(np.matmul(hypothesis - y, x))
+        if verbose:
+            loss = hypothesis - y
+            cost = np.sum(loss**2)/(2*m)
+            print("Iteration %d | Cost: %f" % (i, cost))
+        theta = theta - alpha/m*np.transpose(np.matmul(hypothesis - y, x))
     return theta
 
 
