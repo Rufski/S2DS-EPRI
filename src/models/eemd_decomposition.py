@@ -106,6 +106,8 @@ def eemd_analysis_check_extrema(path_to_data, index=0, sampling_function=np.mean
     df      = downsample_dataframe(df, night_method="basic", clip_method="universal",
                                    power_sampling_function=sampling_function)
     df["ln_power"] = np.log(df.Power.to_numpy())
+    if df["ln_power"].isnull().sum() > 0:
+        df["ln_power"][df["ln_power"].isnull()] = 0.0
     # Run EEMD
     eIMFs, res, nIMFs = eemd_decomposition(df.ln_power.to_numpy())
     # Fourier transfor
