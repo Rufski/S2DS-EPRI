@@ -55,7 +55,8 @@ def group_imfs_into_trend(sample_freq, power, box_length, eIMFs, nIMFs, max_extr
         if  max_pos.shape[0]<max_extrema and min_pos.shape[0]<max_extrema:
             trend = trend + eIMFs[n]
     # degradation factor
-    eta_d = np.exp(trend)/np.exp(trend[0]) ##### THIS MIGHT INVESTIGATE FURTHER!!
+    #TODO: Is there a better way to define the degradation factor from the trend component? 
+    eta_d = np.exp(trend)/np.exp(trend[0])
     return (trend, eta_d)
 
 def eemd_analysis(path_to_data, index=0, sampling_function=np.mean, seed=True, max_extrema=2, verbose=False):
