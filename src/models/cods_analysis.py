@@ -24,7 +24,7 @@ def cods_with_bootstrap(synthetic_type, index=0, realizations=512, clipping="bas
         if verbose:
             print("No available synthetic dataset, the availabe types are 'basic', 'soil', 'soil_weather', 'weather'")
     
-    start_time = time.time() # remove?
+    start_time = time.time()
     
     # Initialize instance
     if clipping=="basic":
@@ -101,13 +101,6 @@ def cods_process_results_one(path_to_data, path_to_pi, path_to_cods, index=0,
 
     _pi_mask = np.logical_and(pi_true.notna(), pi_est.notna())
     _pi_mask[_pi_mask.isna()]=False
-    #print(pi_true.notna()[:10], pi_est.notna()[:10])
-    #print(pi_true[_pi_mask].isna().sum())
-    #print(pi_est[_pi_mask].isna().sum())
-
-    #print(pi_true.notna().sum() / pi_true.size)
-    #print(pi_est.notna().sum() / pi_est.size)
-    #print(_pi_mask.sum())
 
     rmse_pi = mean_squared_error(pi_true[_pi_mask], pi_est[_pi_mask], squared=False)
     # Degradation rate
@@ -213,8 +206,6 @@ def plot_rd(rd, n_samples=50):
     ax[0].plot(rd[1], "bo", label="true")
     ax[0].errorbar(np.arange(0, n_samples), rd[2][:, 0], yerr=[rd[2][:, 0]-rd[2][:, 1], rd[2][:, 2]-rd[2][:, 0]],
                    fmt="o", color="green", capsize=2.5)
-    #ax[0].plot(rd[2][:, 0], "go", label="estimated")
-    #ax[0].fill_between(np.arange(0, n_samples), rd[2][:, 1], rd[2][:, 2], color="green", alpha=0.4)
     ax[1].plot(rd[1]-rd[2][:, 0], "ro")
     ax[0].legend()
 
