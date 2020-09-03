@@ -7,4 +7,4 @@ if __name__ == "__main__":
 
     for i in range(50):
         print ("running CODS algorithm for %i time series" %i)
-        cods_with_bootstrap(synth_type, index=i, realizations=512, clipping="universal", extra=False, verbose=True)
+        cods_with_bootstrap(synth_type, index=i, realizations=512, clipping="basic", extra=False, verbose=True)

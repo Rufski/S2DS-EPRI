@@ -8,106 +8,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredText
 
-def cods_with_bootstrap_extra(synthetic_type, index=0, realizations=512, clipping="basic", extra=False, outlier_threshold=0., verbose=False):
-    
-    """
-    
-    """
-
-    # Load datasets
-    path_to_zip_pkl_pi = f'../../data/raw/new/synthetic_{synthetic_type:s}_pi_daily_extra.zip'
-    try:
-        df = import_df_from_zip_pkl(path_to_zip_pkl_pi, index=index, verbose=True, 
-                                    minofday=False)
-    except:
-        if verbose:
-            print("No available synthetic dataset, the availabe types are 'basic', 'soil', 'soil_weather', 'weather'")
-    
-    start_time = time.time() # remove?
-    
-    # Initialize instance
-    if clipping=="basic":
-        if outlier_threshold != 0.:
-            outlier_mask, n, p = detect_pi_outliers(df.PI_clipping_basic, threshold_min = outlier_threshold, threshold_max = 1.,  verbose=verbose)
-            df[outlier_mask] = np.nan
-        cods_n = 1
-        cods_instance = rdtools.soiling.cods_analysis(df.PI_clipping_basic)
-    elif clipping=="flexible":
-        cods_n = 2
-        df[df.PI_clipping_flexible<outlier_threshold] = np.nan
-        cods_instance = rdtools.soiling.cods_analysis(df.PI_clipping_flexible)
-    elif clipping=="universal":
-        cods_n = 3
-        df[df.PI_clipping_universal<outlier_threshold] = np.nan
-        cods_instance = rdtools.soiling.cods_analysis(df.PI_clipping_universal)
-    else:
-        if verbose==True:
-            print("Function for removing clipping not implemented!")
-
-    # run algorithm
-    cods_instance.run_bootstrap(realizations, verbose=verbose)
-    
-    end_time = time.time() # remove?
-    print("--- %s min ---" %((end_time - start_time)/60.)) # remove?
-    
-    # save results
-    _file = open(f'../../data/processed/new/new/cods_results_{synthetic_type:s}_extra_i{str(index).zfill(3):s}_r{str(realizations).zfill(3):s}_c{cods_n:d}.pkl', "wb")
-    pickle.dump(cods_instance , _file)
-    
-    return None
-
-def cods_with_bootstrap_uniform(synthetic_type, index=0, realizations=512, clipping="basic", extra=False, outlier_threshold=0., verbose=False):
-    
-    """
-    
-    """
-
-    # Load datasets
-    path_to_zip_pkl_pi = f'../../data/raw/new/synthetic_{synthetic_type:s}_pi_daily_uniform.zip'
-    try:
-        df = import_df_from_zip_pkl(path_to_zip_pkl_pi, index=index, verbose=True, 
-                                    minofday=False)
-    except:
-        if verbose:
-            print("No available synthetic dataset, the availabe types are 'basic', 'soil', 'soil_weather', 'weather'")
-    
-    start_time = time.time() # remove?
-    
-    # Initialize instance
-    if clipping=="basic":
-        if outlier_threshold != 0.:
-            outlier_mask, n, p = detect_pi_outliers(df.PI_clipping_basic, threshold_min = outlier_threshold, threshold_max = 1.,  verbose=verbose)
-            df[outlier_mask] = np.nan
-        cods_n = 1
-        cods_instance = rdtools.soiling.cods_analysis(df.PI_clipping_basic)
-    elif clipping=="flexible":
-        cods_n = 2
-        df[df.PI_clipping_flexible<outlier_threshold] = np.nan
-        cods_instance = rdtools.soiling.cods_analysis(df.PI_clipping_flexible)
-    elif clipping=="universal":
-        cods_n = 3
-        df[df.PI_clipping_universal<outlier_threshold] = np.nan
-        cods_instance = rdtools.soiling.cods_analysis(df.PI_clipping_universal)
-    else:
-        if verbose==True:
-            print("Function for removing clipping not implemented!")
-
-    # run algorithm
-    cods_instance.run_bootstrap(realizations, verbose=verbose)
-    
-    end_time = time.time() # remove?
-    print("--- %s min ---" %((end_time - start_time)/60.)) # remove?
-    
-    # save results
-    _file = open(f'../../data/processed/new/new/cods_results_{synthetic_type:s}_uniform_i{str(index).zfill(3):s}_r{str(realizations).zfill(3):s}_c{cods_n:d}.pkl', "wb")
-    pickle.dump(cods_instance , _file)
-    
-    return None
 
 def cods_with_bootstrap(synthetic_type, index=0, realizations=512, clipping="basic", extra=False, outlier_threshold=0., verbose=False):
     
     """
-    
+    function to run the CODS algorithm by A. Skomedal 
     """
 
     # Load datasets
@@ -154,7 +59,7 @@ def cods_with_bootstrap(synthetic_type, index=0, realizations=512, clipping="bas
 
 def load_cods_results(synth_type, index=0, clipping="basic", verbose=False):
     """
-
+    function to load the CODS results
     """
     path = ("../data/processed/cods_results_" + synth_type
              + "_r" + str(realizations) + "_c" + clipping + "_o" + outlier + ".zip")
@@ -168,6 +73,7 @@ def cods_process_results_one(path_to_data, path_to_pi, path_to_cods, index=0,
                              clipping="1", realizations=512, verbose=True):
 
     """
+    function to analyse the CODS results for a single timeseries
     """
 
     # synthetic time series
@@ -228,6 +134,11 @@ def find_extrema_rmse(rmse, true, est):
 
 def cods_process_results_all(path_to_data, path_to_pi, path_to_cods, n_samples=50, clipping="1",
                              realizations=512, verbose=False):
+    
+    """
+    function to analyse the CODS results for a all timeseries of a dataset
+    """
+    
     rmse_pi = np.zeros(n_samples)
     rmse_rd = np.zeros(n_samples)
     rmse_sr = np.zeros(n_samples)
