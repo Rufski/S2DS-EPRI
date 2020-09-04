@@ -6,7 +6,7 @@ This is the github repository for Team EPRI at S2DS August 2020.
 
 ## Table of Contents
 
-* Setup
+* [Setup](https://github.com/S2DSLondon/Aug20_Epri/tree/update-readme#setup)
 
 * [Data](https://github.com/S2DSLondon/Aug20_Epri#data)
 
@@ -23,18 +23,7 @@ The following steps have to be taken in order to use the code in this repository
 - In order to use the CODS algorithm one has to install the development branch from Åsmund Skomedal's RdTools fork via `pip3 install git+https://github.com/asmunds/rdtools.git@development`.
 - In the root of the repository run `pip3 install --editable .` in order to be able to import the functionality of this repository as a python library.
 
-The 
-
-
-
-## Codebase Structure
-
-The following steps have to be taken in order to use the code in this repository:
-- Download/clone this repository in order to have a local copy.
-- Use virtual environments, e.g., `venv` (see guide here) or `conda` (see guide here), in order to create a virtual python3 environment for this repository.
-- Once the virtual environment is active use `pip3 install -r requirements.txt` in order to install all necessary packages. 
-- In order to use the CODS algorithm one has to install the development branch from Åsmund Skomedal's RdTools fork via `pip3 install git+https://github.com/asmunds/rdtools.git@development`.
-- In the root of the repository run `pip3 install --editable .` in order to be able to import the functionality of this repository as a python library.
+The code in the notebooks assumes that the raw datasets, i.e., `synthetic_XXX.zip`, e.g., `synthetic_soil_weather.zip`, are located in the `/data/raw/` directory of the repository. Processed datasets such as the results from the CODS algorithm or the normalized performance index should be located in `/data/processed/`. By extracting the zip-archive `processed_datasets.zip` from EPRI's box.com archive inside `/data/processed/` all notebooks will be able to run correctly. Otherwise the datapaths inside the respective notebooks can be modified.  
 
 ## Data 
 
@@ -116,7 +105,7 @@ For each data point of the time series the following attributes are provided:
 |-------------------------|:-----------------------:|-------:|
 | Power                   | Power                   | kW     |
 | Plane of array          | POA                     | W/m^2  |
-| Ambient Temperatur      | Tamb                    | °C     |
+| Ambient Temperature     | Tamb                    | °C     |
 | Wind                    | Wind                    | m/s    |
 | Degradation             | Degradation             | -      |
 | Soiling                 | soiling                 | -      |
