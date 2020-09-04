@@ -8,6 +8,8 @@ This is the github repository for Team EPRI at S2DS August 2020.
 
 * [Setup](https://github.com/S2DSLondon/Aug20_Epri/tree/update-readme#setup)
 
+* [Code](https://github.com/S2DSLondon/Aug20_Epri#code)
+
 * [Data](https://github.com/S2DSLondon/Aug20_Epri#data)
 
 * [Conventions and Style](https://github.com/S2DSLondon/Aug20_Epri#conventions-and-style)
@@ -24,6 +26,10 @@ The following steps have to be taken in order to use the code in this repository
 - In the root of the repository run `pip3 install --editable .` in order to be able to import the functionality of this repository as a python library.
 
 The code in the notebooks assumes that the raw datasets, i.e., `synthetic_XXX.zip`, e.g., `synthetic_soil_weather.zip`, are located in the `/data/raw/` directory of the repository. Processed datasets such as the results from the CODS algorithm or the normalized performance index should be located in `/data/processed/`. By extracting the zip-archive `processed_datasets.zip` from EPRI's box.com archive inside `/data/processed/` all notebooks will be able to run correctly. Otherwise the datapaths inside the respective notebooks can be modified.  
+
+## Code
+
+Examples for how to use the functionalities of this repository are given in the directory `/notebooks/`. Functions have documentation via docstring, which can be called using `help(example_function)`.
 
 ## Data 
 
